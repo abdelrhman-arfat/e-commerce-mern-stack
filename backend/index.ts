@@ -5,6 +5,7 @@ import connectDB from "./config/connectDB.js";
 import authRouter from "./routes/auth.routes.js";
 import productsRouter from "./routes/products.routes.js";
 import { CORS_ORIGIN, PORT } from "./constants/envVar.js";
+import orderRouter from "./routes/orders.routes.js";
 
 const app: Express = express();
 
@@ -21,17 +22,9 @@ app.use(
   })
 );
 
-(async () => {
-  try {
-    connectDB();
-  } catch {
-    console.error("Failed to connect to the database");
-    process.exit(1);
-  }
-})();
-
 app.use("/api/auth", authRouter);
 app.use("/api/products", productsRouter);
+app.use("/api/orders", orderRouter);
 
 app.use("*", async (_, res: Response) => {
   res.status(404).json({
@@ -43,4 +36,5 @@ app.use("*", async (_, res: Response) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  connectDB();
 });

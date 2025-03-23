@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 interface IProducts {
   title: string;
@@ -6,6 +6,7 @@ interface IProducts {
   price: number;
   image: string;
   category: string;
+  creator: ObjectId;
   comments: { comment: string; user: mongoose.Types.ObjectId; date: Date }[];
   likes: { user: mongoose.Types.ObjectId; date: Date }[];
 }
@@ -36,6 +37,11 @@ const ProductSchema = new mongoose.Schema<IProducts>(
     category: {
       type: String,
       ref: "categories",
+      required: true,
+    },
+    creator: {
+      type: mongoose.Types.ObjectId,
+      ref: "users",
       required: true,
     },
     comments: [

@@ -7,6 +7,7 @@ import {
   updateProductDate,
   addOrDeleteLikeToProduct,
   addCommentToProduct,
+  deleteComment,
 } from "../controllers/products.controller.js";
 import protectedMiddleware from "../middleware/protected.js";
 import adminWork from "../middleware/adminWork.js";
@@ -18,20 +19,6 @@ const productsRouter = Router();
 productsRouter
   .get("/", getAllProducts)
   .get("/:product_id", getProductById)
-  .patch(
-    // want test
-    "/comment/:product_id",
-    protectedMiddleware,
-    isVerified,
-    addCommentToProduct
-  )
-  .patch(
-    // want test
-    "/like/:product_id",
-    protectedMiddleware,
-    isVerified,
-    addOrDeleteLikeToProduct
-  )
   .post(
     "/new-product",
     protectedMiddleware,
@@ -54,6 +41,19 @@ productsRouter
     isVerified,
     adminWork,
     deleteProductById
+  )
+  .delete("/delete-comment/:product_id", deleteComment)
+  .patch(
+    "/comment/:product_id",
+    protectedMiddleware,
+    isVerified,
+    addCommentToProduct
+  )
+  .patch(
+    "/like/:product_id",
+    protectedMiddleware,
+    isVerified,
+    addOrDeleteLikeToProduct
   );
 
 export default productsRouter;

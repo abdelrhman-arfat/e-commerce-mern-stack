@@ -248,5 +248,36 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
+const logOut = async (req: Request, res: Response): Promise<void> => {
+  try {
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: NODE_ENV === "production",
+      maxAge: 0,
+      sameSite: "strict",
+    });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: NODE_ENV === "production",
+      maxAge: 0,
+      sameSite: "strict",
+    });
 
-export { signUP, login, deleteUser };
+    res.status(200).json({
+      message: "Logged out successfully",
+      error: null,
+      results: null,
+      code: 200,
+    });
+    return;
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      error: error.message,
+      message: "internal error occurred",
+      results: null,
+      code: 500,
+    });
+  }
+};
+export { signUP, login, deleteUser, logOut };

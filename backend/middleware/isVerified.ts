@@ -5,8 +5,7 @@ export default function isVerified(
   res: Response,
   next: NextFunction
 ) {
-  const user = req.user;
-  const { isVerified } = user;
+  const isVerified = req.user.isVerified;
   if (!isVerified) {
     res.status(403).json({
       message: "please verify your email first and try again",
