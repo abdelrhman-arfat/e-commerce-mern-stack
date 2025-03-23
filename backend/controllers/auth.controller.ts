@@ -13,9 +13,9 @@ const signUP = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { username, password, confirmPassword, email, name } = req.body;
+    const { username, password, confirmPassword, email, fullname } = req.body;
 
-    if (!username || !password || !confirmPassword || !email || !name) {
+    if (!username || !password || !confirmPassword || !email || !fullname) {
       res.status(400).json({
         message: "Please enter valid data",
         error: "Invalid Data",
@@ -35,7 +35,7 @@ const signUP = async (
       username,
       password: hashedPassword,
       email,
-      name,
+      fullname,
     });
 
     if (!user) {
@@ -43,7 +43,7 @@ const signUP = async (
         message: "Failed to create user.",
         results: null,
         error: "Failed to create user",
-        code: 401,
+        code: 400,
       });
       return;
     }
@@ -55,6 +55,7 @@ const signUP = async (
       username: user.username,
       email: user.email,
       role: user.role,
+      isVerified: user.isVerified,
     };
 
     const accessToken = await webAccessToken(userInfo);
@@ -77,12 +78,12 @@ const signUP = async (
       message: "User created.",
       error: null,
       results: {
-        username: user.username,
+        username,
+        fullname,
         profilePicture: user.profilePicture,
-        email: user.email,
+        email,
         role: user.role,
         _id: user._id,
-        name: user.name,
       },
     });
     return;
@@ -97,7 +98,11 @@ const signUP = async (
   }
 };
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -129,6 +134,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       username: user.username,
       email: user.email,
       role: user.role,
+      isVerified: user.isVerified,
     };
 
     const accessToken = await webAccessToken(userInfo);
@@ -170,9 +176,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const deleteUser = async (req: Request, res: Response) => {
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user_id } = req.params;
+
     const userReq = req?.user;
 
     if (!isValidObjectId(user_id)) {
@@ -198,8 +205,8 @@ const deleteUser = async (req: Request, res: Response) => {
 
     if (!user._id.equals(userReq._id) && userReq.role === "USER") {
       res.status(403).json({
-        message: "Unauthorized to delete this user",
-        error: "Unauthorized",
+        message: "Can't delete this user",
+        error: "Forbidden",
         results: null,
         code: 403,
       });
@@ -208,19 +215,21 @@ const deleteUser = async (req: Request, res: Response) => {
 
     await user.deleteOne();
 
-    res.clearCookie("jwt", {
-      httpOnly: true,
-      secure: NODE_ENV === "production",
-      maxAge: 0,
-      sameSite: "strict",
-    });
+    if (user._id.equals(userReq._id)) {
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
 
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: NODE_ENV === "production",
-      maxAge: 0,
-      sameSite: "strict",
-    });
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+    }
 
     res.status(200).json({
       message: "User deleted successfully",
@@ -228,6 +237,7 @@ const deleteUser = async (req: Request, res: Response) => {
       results: null,
       code: 204,
     });
+    return;
   } catch (err) {
     const error = err as Error;
     res.status(500).json({

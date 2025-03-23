@@ -2,16 +2,17 @@ import mongoose from "mongoose";
 import validator from "validator";
 
 interface IUser {
-  name: string;
+  fullname: string;
   username: string;
   email: string;
   password: string;
   profilePicture: string;
+  isVerified: boolean;
   role: "ADMIN" | "USER";
 }
 
 const UserSchema = new mongoose.Schema<IUser>({
-  name: {
+  fullname: {
     type: String,
     required: true,
     minlength: 2,
@@ -32,6 +33,10 @@ const UserSchema = new mongoose.Schema<IUser>({
       validator: validator.isEmail,
       message: "{VALUE} is not a valid email",
     },
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
   password: {
     type: String,

@@ -6,6 +6,8 @@ interface IProducts {
   price: number;
   image: string;
   category: string;
+  comments: { comment: string; user: mongoose.Types.ObjectId; date: Date }[];
+  likes: { user: mongoose.Types.ObjectId; date: Date }[];
 }
 
 const ProductSchema = new mongoose.Schema<IProducts>(
@@ -13,7 +15,7 @@ const ProductSchema = new mongoose.Schema<IProducts>(
     title: {
       type: String,
       required: true,
-      minlength: 3,
+      minlength: 2,
       maxlength: 100,
     },
     price: {
@@ -25,7 +27,7 @@ const ProductSchema = new mongoose.Schema<IProducts>(
       type: String,
       required: true,
       minlength: 10,
-      maxlength: 2000,
+      maxlength: 200,
     },
     image: {
       type: String,
@@ -36,6 +38,35 @@ const ProductSchema = new mongoose.Schema<IProducts>(
       ref: "categories",
       required: true,
     },
+    comments: [
+      {
+        user: {
+          type: mongoose.Types.ObjectId,
+          ref: "users",
+          required: true,
+        },
+        data: {
+          type: Date,
+          default: Date.now(),
+        },
+        comment: {
+          type: String,
+        },
+      },
+    ],
+    likes: [
+      {
+        user: {
+          type: mongoose.Types.ObjectId,
+          ref: "users",
+          required: true,
+        },
+        data: {
+          type: Date,
+          default: Date.now(),
+        },
+      },
+    ],
   },
   {
     timestamps: true,
