@@ -316,7 +316,7 @@ const verificationAccount = async (req: Request, res: Response) => {
     const user = await User.findByIdAndUpdate(
       deCoded._id,
       {
-        $ser: {
+        $set: {
           isVerified: true,
         },
       },
