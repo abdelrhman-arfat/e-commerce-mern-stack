@@ -303,7 +303,7 @@ const verificationAccount = async (req: Request, res: Response) => {
       JWT_SECRET as string
     )) as jwt.JwtPayload;
 
-    if (!deCoded) {
+    if (!deCoded || !isValidObjectId(deCoded._id)) {
       res.status(401).json({
         message: "Invalid or expired verification token",
         error: "Invalid or expired verification token",
