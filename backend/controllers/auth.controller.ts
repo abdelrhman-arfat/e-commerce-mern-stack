@@ -7,13 +7,8 @@ import webRefreshToken from "../utils/webRefreshToken.js";
 import { isValidObjectId, ObjectId } from "mongoose";
 import { JWT_SECRET, NODE_ENV } from "../constants/envVar.js";
 import sendEmailForVerification from "../utils/sendEmail.js";
-import { TUserInfo } from "../types/userInfo.js";
-
-const signUP = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+import { validationResult } from "express-validator";
+const signUP = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password, confirmPassword, email, fullname } = req.body;
 
@@ -22,6 +17,18 @@ const signUP = async (
         message: "Please enter valid data",
         error: "Invalid Data",
         results: null,
+        code: 400,
+      });
+      return;
+    }
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        message: "error in data",
+        results: null,
+        error: errors.array(),
         code: 400,
       });
       return;
@@ -118,6 +125,18 @@ const login = async (
       return;
     }
 
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        message: "error in data",
+        results: null,
+        error: errors.array(),
+        code: 400,
+      });
+      return;
+    }
+
     const user = await User.findOne({
       username,
     }).select("+password");
@@ -179,78 +198,6 @@ const login = async (
   }
 };
 
-const deleteUser = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { user_id } = req.params;
-
-    const userReq = req?.user;
-
-    if (!isValidObjectId(user_id)) {
-      res.status(400).json({
-        message: "Invalid user id",
-        error: "Invalid user id",
-        results: null,
-        code: 400,
-      });
-      return;
-    }
-
-    const user = await User.findById(user_id);
-    if (!user) {
-      res.status(404).json({
-        message: "User not found",
-        error: "User not found",
-        results: null,
-        code: 404,
-      });
-      return;
-    }
-
-    if (!user._id.equals(userReq._id) && userReq.role === "USER") {
-      res.status(403).json({
-        message: "Can't delete this user",
-        error: "Forbidden",
-        results: null,
-        code: 403,
-      });
-      return;
-    }
-
-    await user.deleteOne();
-
-    if (user._id.equals(userReq._id)) {
-      res.clearCookie("jwt", {
-        httpOnly: true,
-        secure: NODE_ENV === "production",
-        maxAge: 0,
-        sameSite: "strict",
-      });
-
-      res.clearCookie("token", {
-        httpOnly: true,
-        secure: NODE_ENV === "production",
-        maxAge: 0,
-        sameSite: "strict",
-      });
-    }
-
-    res.status(200).json({
-      message: "User deleted successfully",
-      error: null,
-      results: null,
-      code: 204,
-    });
-    return;
-  } catch (err) {
-    const error = err as Error;
-    res.status(500).json({
-      error: error.message,
-      message: "internal error occurred",
-      results: null,
-      code: 500,
-    });
-  }
-};
 const logOut = async (req: Request, res: Response): Promise<void> => {
   try {
     res.clearCookie("jwt", {
@@ -338,7 +285,7 @@ const verificationAccount = async (req: Request, res: Response) => {
     res.status(200).json({
       message: "verification successful",
       error: null,
-      results: deCoded,
+      results: user,
       code: 200,
     });
 
@@ -354,4 +301,4 @@ const verificationAccount = async (req: Request, res: Response) => {
   }
 };
 
-export { signUP, login, deleteUser, logOut, verificationAccount };
+export { signUP, login, logOut, verificationAccount };

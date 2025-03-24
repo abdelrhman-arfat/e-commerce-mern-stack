@@ -108,7 +108,7 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({
         message: "all fields are requirement",
         error: null,
-        results: [],
+        results: null,
         code: 400,
       });
       return;
@@ -120,7 +120,7 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
       res.status(401).json({
         message: "You should login first and try again",
         error: null,
-        results: [],
+        results: null,
         code: 401,
       });
       return;
@@ -134,16 +134,6 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
       category,
       creator: userReq._id,
     });
-
-    if (!newProduct) {
-      res.status(400).json({
-        message: "Can't create this product please try again",
-        error: null,
-        results: [],
-        code: 400,
-      });
-      return;
-    }
 
     await newProduct.save();
 
@@ -290,7 +280,7 @@ const addOrDeleteLikeToProduct = async (
         message: "Invalid product ID",
         error: null,
         code: 400,
-        results: [],
+        results: null,
       });
       return;
     }
@@ -301,7 +291,7 @@ const addOrDeleteLikeToProduct = async (
       res.status(401).json({
         message: "Please login first and try again",
         error: null,
-        results: [],
+        results: null,
         code: 401,
       });
       return;
@@ -313,7 +303,7 @@ const addOrDeleteLikeToProduct = async (
         message: "Product not found",
         code: 404,
         error: null,
-        results: [],
+        results: null,
       });
       return;
     }
@@ -329,7 +319,7 @@ const addOrDeleteLikeToProduct = async (
         message: "Like removed successfully",
         code: 200,
         error: null,
-        results: [],
+        results: null,
       });
       return;
     } else {
@@ -339,7 +329,7 @@ const addOrDeleteLikeToProduct = async (
         message: "Like added successfully",
         code: 200,
         error: null,
-        results: [],
+        results: null,
       });
       return;
     }
@@ -364,7 +354,7 @@ const addCommentToProduct = async (
       res.status(400).json({
         message: "invalid id",
         error: null,
-        results: [],
+        results: null,
         code: 400,
       });
       return;
@@ -377,19 +367,18 @@ const addCommentToProduct = async (
         message: "you should login first and try again",
         error: null,
         code: 401,
-        results: [],
+        results: null,
       });
       return;
     }
 
     const { comment } = req.body;
-
-    if (!comment) {
+    if (!comment?.trim()) {
       res.status(400).json({
-        message: "comment is required",
+        message: "Comment is required",
+        error: "Empty comment",
+        results: null,
         code: 400,
-        error: null,
-        results: [],
       });
       return;
     }
@@ -400,7 +389,7 @@ const addCommentToProduct = async (
         message: "product not found",
         error: null,
         code: 404,
-        results: [],
+        results: null,
       });
       return;
     }
@@ -416,7 +405,7 @@ const addCommentToProduct = async (
     res.status(200).json({
       message: "comment added successfully",
       code: 200,
-      results: [],
+      results: null,
       error: null,
     });
   } catch (err) {
@@ -425,7 +414,7 @@ const addCommentToProduct = async (
       message: "internal error",
       error: error.message,
       code: 500,
-      results: [],
+      results: null,
     });
   }
 };
@@ -438,7 +427,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
         message: "invalid id",
         error: null,
         code: 400,
-        results: [],
+        results: null,
       });
       return;
     }
@@ -455,7 +444,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
         message: "product not found",
         error: null,
         code: 404,
-        results: [],
+        results: null,
       });
       return;
     }
@@ -468,7 +457,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({
         message: "no existing comment",
         code: 400,
-        results: [],
+        results: null,
         error: null,
       });
       return;
@@ -485,7 +474,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
         message: "you are not authorized to delete this comment",
         error: null,
         code: 403,
-        results: [],
+        results: null,
       });
       return;
     } else {
@@ -496,7 +485,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: "comment deleted successfully",
       code: 200,
-      results: [],
+      results: null,
       error: null,
     });
   } catch (err) {
@@ -505,7 +494,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
       message: "internal error",
       error: error.message,
       code: 500,
-      results: [],
+      results: null,
     });
   }
 };

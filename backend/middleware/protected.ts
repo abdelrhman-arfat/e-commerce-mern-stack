@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import User from "../schemas/userSchema";
-import { ObjectId } from "mongoose";
+
 declare global {
   namespace Express {
     interface Request {

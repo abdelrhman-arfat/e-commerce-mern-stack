@@ -42,12 +42,12 @@ const UserSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
     minlength: 8,
+    maxlength:16,
     select: false,
   },
   profilePicture: {
     type: String,
-    default:
-      "https://res.cloudinary.com/dannuv9wj/image/upload/v1742520128/u5jwxxccget5wpe1cyp4.png",
+    default: "",
   },
   role: {
     type: String,

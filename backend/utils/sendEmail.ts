@@ -3,8 +3,8 @@ import {
   EMAIL_PASS,
   EMAIL_USER,
   JWT_SECRET,
-} from "../constants/envVar";
-import { TUserInfo } from "../types/userInfo";
+} from "../constants/envVar.js";
+import { TUserInfo } from "../types/userInfo.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 

@@ -12,7 +12,7 @@ const orderSchema = new mongoose.Schema<IOrder>({
   userId: {
     type: mongoose.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: "users",
   },
   isDone: {
     type: Boolean,
@@ -21,7 +21,7 @@ const orderSchema = new mongoose.Schema<IOrder>({
   productId: {
     type: mongoose.Types.ObjectId,
     required: true,
-    ref: "Product",
+    ref: "products",
   },
   quantity: {
     type: Number,
