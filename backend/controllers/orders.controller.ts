@@ -160,4 +160,53 @@ const deleteOrderById = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
-export { createOrder, getAllOrders, deleteOrderById };
+
+const doneTheOrder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { order_id } = req.params;
+
+    if (!isValidObjectId(order_id)) {
+      res.status(400).json({
+        message: "Invalid order id",
+        error: null,
+        results: null,
+        code: 400,
+      });
+      return;
+    }
+
+    const order = await Order.findByIdAndUpdate(
+      order_id,
+      { $set: { isDone: true } },
+      { new: true }
+    );
+
+    if (!order) {
+      res.status(404).json({
+        message: "Order not found",
+        error: null,
+        results: null,
+        code: 404,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Order marked as done",
+      error: null,
+      results: order,
+      code: 200,
+    });
+    return;
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      message: "internal error",
+      error: error.message,
+      results: null,
+      code: 500,
+    });
+  }
+};
+
+export { doneTheOrder, createOrder, getAllOrders, deleteOrderById };

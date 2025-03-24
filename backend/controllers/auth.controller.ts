@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import User from "../schemas/userSchema.js";
 import webAccessToken from "../utils/webAccessToken.js";
 import webRefreshToken from "../utils/webRefreshToken.js";
-
-import { isValidObjectId } from "mongoose";
-import { NODE_ENV } from "../constants/envVar.js";
+import { isValidObjectId, ObjectId } from "mongoose";
+import { JWT_SECRET, NODE_ENV } from "../constants/envVar.js";
+import sendEmailForVerification from "../utils/sendEmail.js";
+import { TUserInfo } from "../types/userInfo.js";
 
 const signUP = async (
   req: Request,
@@ -57,7 +59,7 @@ const signUP = async (
       role: user.role,
       isVerified: user.isVerified,
     };
-
+    await sendEmailForVerification(userInfo);
     const accessToken = await webAccessToken(userInfo);
     const refreshToken = await webRefreshToken(userInfo);
 
@@ -75,7 +77,8 @@ const signUP = async (
     });
 
     res.status(201).json({
-      message: "User created.",
+      message:
+        "Created successfully, please check your email to verify your account",
       error: null,
       results: {
         username,
@@ -280,4 +283,75 @@ const logOut = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
-export { signUP, login, deleteUser, logOut };
+
+const verificationAccount = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      res.status(400).json({
+        message: "Missing verification token",
+        error: "Invalid token",
+        results: null,
+        code: 400,
+      });
+      return;
+    }
+
+    const deCoded = (await jwt.verify(
+      token as string,
+      JWT_SECRET as string
+    )) as jwt.JwtPayload;
+
+    if (!deCoded) {
+      res.status(401).json({
+        message: "Invalid or expired verification token",
+        error: "Invalid or expired verification token",
+        results: null,
+        code: 401,
+      });
+      return;
+    }
+
+    const user = await User.findByIdAndUpdate(
+      deCoded._id,
+      {
+        $ser: {
+          isVerified: true,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!user) {
+      res.status(404).json({
+        message: "User not found",
+        error: "User not found",
+        results: null,
+        code: 404,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "verification successful",
+      error: null,
+      results: deCoded,
+      code: 200,
+    });
+
+    return;
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      error: error.message,
+      message: "internal error occurred",
+      results: null,
+      code: 500,
+    });
+  }
+};
+
+export { signUP, login, deleteUser, logOut, verificationAccount };

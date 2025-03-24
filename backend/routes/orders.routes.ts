@@ -6,18 +6,20 @@ import {
   createOrder,
   deleteOrderById,
   getAllOrders,
+  doneTheOrder,
 } from "../controllers/orders.controller.js";
 
 const orderRouter = Router();
 
 orderRouter
   .get("/", getAllOrders)
-  .post(
-    "/new-order",
+  .post("/new-order", protectedMiddleware, isVerified, adminWork, createOrder)
+  .patch(
+    "/order-update/:order_id",
     protectedMiddleware,
     isVerified,
     adminWork,
-    createOrder
+    doneTheOrder
   )
   .delete(
     "/delete-order/:order_id",

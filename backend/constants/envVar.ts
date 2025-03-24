@@ -19,6 +19,9 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN;
 
 const NODE_ENV = process.env.NODE_ENV;
 
+const EMAIL_PASS = process.env.EMAIL_PASS;
+const EMAIL_USER = process.env.EMAIL_USER;
+
 export {
   MONGODB_URI,
   JWT_REFRESH_SECRET,
@@ -29,4 +32,6 @@ export {
   CORS_ORIGIN,
   PORT,
   NODE_ENV,
+  EMAIL_PASS,
+  EMAIL_USER,
 };

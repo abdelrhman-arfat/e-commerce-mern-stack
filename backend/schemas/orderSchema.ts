@@ -5,6 +5,7 @@ interface IOrder {
   userId: ObjectId;
   productId: ObjectId;
   quantity: number;
+  isDone: boolean;
 }
 
 const orderSchema = new mongoose.Schema<IOrder>({
@@ -12,6 +13,10 @@ const orderSchema = new mongoose.Schema<IOrder>({
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "User",
+  },
+  isDone: {
+    type: Boolean,
+    default: false,
   },
   productId: {
     type: mongoose.Types.ObjectId,
