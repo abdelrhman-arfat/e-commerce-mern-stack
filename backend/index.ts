@@ -1,6 +1,7 @@
 import express, { Express, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import connectDB from "./config/connectDB.js";
 import authRouter from "./routes/auth.routes.js";
 import productsRouter from "./routes/products.routes.js";
@@ -18,6 +19,7 @@ app.use(express.json({ limit: "10mb" })); // max size is 10mb
 app.use(express.urlencoded({ extended: true })); //
 
 app.use(cookieParser());
+app.use(helmet());
 
 app.use(
   cors({

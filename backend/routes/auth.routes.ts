@@ -4,7 +4,7 @@ import {
   signUP,
   logOut,
   verificationAccount,
-  refreshToken
+  refreshToken,
 } from "../controllers/auth.controller.js";
 import loginLimiter from "../middleware/loginLimiter.js";
 import signUpLimiter from "../middleware/signUpLimiter.js";
@@ -31,10 +31,10 @@ const signUpValidator = [
 const authRouter = Router();
 
 authRouter
-  .post("/sign-up", signUpLimiter,signUpValidator, signUP)
+  .post("/sign-up", signUpLimiter, signUpValidator, signUP)
   .post("/login", loginLimiter, loginValidator, login)
   .post("/verify-account", protectedMiddleware, verificationAccount)
-  .get("/refresh-token", protectedMiddleware , refreshToken)
+  .get("/refresh-token", protectedMiddleware, refreshToken)
   .post("/logout", protectedMiddleware, logOut);
 
 export default authRouter;
