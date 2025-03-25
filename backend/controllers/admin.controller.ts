@@ -3,7 +3,7 @@ import { isValidObjectId } from "mongoose";
 import User from "../schemas/userSchema.js";
 import Product from "../schemas/productSchema.js";
 import { deleteExistImage } from "../config/cloudinary.js";
-import Categories from "../schemas/categroiesSchema.js";
+import Categories from "../schemas/categoriesSchema.js";
 
 const deleteUserFromAdmin = async (
   req: Request,

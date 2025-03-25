@@ -9,16 +9,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        love:"#e50000",
+        love: "#e50000",
         zero: "#fdfdfd",
         one: "#90caf9",
         two: "#64b5f6",
         three: "#42a5f5",
         four: "#2196f3",
-        five: "#1e88e5",
-        six: "#1565c0",
-        seven: "#0d47a1",
-        eight: "#00a8e8",
+        five: "#00a8e8",
+        six: "#1e88e5",
+        seven: "#1565c0",
+        eight: "#0d47a1",
         nine: "#003459",
         ten: "#00171f",
       },

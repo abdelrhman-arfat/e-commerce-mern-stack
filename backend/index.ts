@@ -11,6 +11,7 @@ import userRouter from "./routes/user.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import favRouter from "./routes/fav.routes.js";
 import cartRouter from "./routes/cart.routes.js";
+import categoriesRouter from "./routes/category.routes.js";
 
 const app: Express = express();
 
@@ -35,6 +36,7 @@ app.use("/api/favorites", favRouter);
 app.use("/api/users", userRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/category", categoriesRouter);
 
 app.use("*", async (_, res: Response) => {
   res.status(404).json({
