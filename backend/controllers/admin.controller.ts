@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 import User from "../schemas/userSchema.js";
 import Product from "../schemas/productSchema.js";
 import { deleteExistImage } from "../config/cloudinary.js";
+import Categories from "../schemas/categroiesSchema.js";
 
 const deleteUserFromAdmin = async (
   req: Request,
@@ -61,4 +62,88 @@ const deleteUserFromAdmin = async (
     });
   }
 };
-export { deleteUserFromAdmin };
+
+const createNewCategory = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  // promise<Response> to make return res.status(...).json(...)
+  try {
+    const { name } = req.body;
+    const image = req.file?.path;
+
+    if (!name || !image) {
+      res.status(400).json({
+        message: "category data is required",
+        error: null,
+        results: null,
+        code: 400,
+      });
+      return;
+    }
+
+    const newCategory = new Categories({ name, image });
+    await newCategory.save();
+    res.status(201).json({
+      message: "category successfully saved",
+      error: null,
+      code: 201,
+      results: newCategory,
+    });
+    return;
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      message: "internal error occurred",
+      error: error.message,
+      code: 500,
+      results: null,
+    });
+    return;
+  }
+};
+const deleteCategory = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { category_id } = req.params;
+
+    if (!isValidObjectId(category_id)) {
+      res.status(400).json({
+        message: "Invalid category id",
+        error: "Invalid category id",
+        results: null,
+        code: 400,
+      });
+      return;
+    }
+
+    const category = await Categories.findById(category_id).exec();
+
+    if (!category || !category.image) {
+      res.status(404).json({
+        message: "category not found",
+        error: null,
+        code: 404,
+        results: null,
+      });
+      return;
+    }
+
+    await Promise.all([deleteExistImage(category.image), category.deleteOne()]);
+
+    res.status(200).json({
+      message: "category deleted successfully",
+      error: null,
+      code: 204,
+      results: null,
+    });
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      message: "internal error occurred",
+      error: error.message,
+      code: 500,
+      results: null,
+    });
+  }
+};
+export { deleteUserFromAdmin, deleteCategory, createNewCategory };

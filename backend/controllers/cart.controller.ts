@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Cart from "../schemas/cart.schema";
+import Cart from "../schemas/cart.schema.js";
 import { isValidObjectId } from "mongoose";
 
 const getCarts = async (req: Request, res: Response): Promise<void> => {

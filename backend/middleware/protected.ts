@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, NODE_ENV } from "../constants/envVar";
+import { JWT_SECRET, NODE_ENV } from "../constants/envVar.js";
 
 declare global {
   namespace Express {

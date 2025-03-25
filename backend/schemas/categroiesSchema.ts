@@ -2,10 +2,20 @@ import mongoose from "mongoose";
 
 interface ICategories {
   name: string;
+  image: string;
 }
 
 const CategorySchema = new mongoose.Schema<ICategories>(
   {
+    image: {
+      type: String,
+      required: true,
+      validate: {
+        validator: (value: string) =>
+          /^https?:\/\/.*\.(?:png|jpg|jpeg|gif)$/.test(value),
+        message: "invalid url image please try again",
+      },
+    },
     name: {
       type: String,
       required: true,

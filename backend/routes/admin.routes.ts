@@ -8,40 +8,25 @@ import protectedMiddleware from "../middleware/protected.js";
 import isVerified from "../middleware/isVerified.js";
 import adminWork from "../middleware/adminWork.js";
 import { upload } from "../config/cloudinary.js";
-import { deleteUserFromAdmin } from "../controllers/admin.controller.js";
+import {
+  createNewCategory,
+  deleteUserFromAdmin,
+  deleteCategory,
+} from "../controllers/admin.controller.js";
 
 const adminRouter = Router();
 
 adminRouter
-  .post(
-    "/new-product",
-    protectedMiddleware,
-    isVerified,
-    adminWork,
-    upload.single("image"),
-    addNewProduct
-  )
+  .use(protectedMiddleware, isVerified, adminWork)
+  .post("/new-product", upload.single("image"), addNewProduct)
+  .post("/new-category", upload.single("image"), createNewCategory)
+  .delete("/delete-/:category_id", deleteCategory)
   .patch(
     "/update-product/:product_id",
-    protectedMiddleware,
-    isVerified,
-    adminWork,
     upload.single("image"),
     updateProductDate
   )
-  .delete(
-    "/delete-product/:product_id",
-    protectedMiddleware,
-    isVerified,
-    adminWork,
-    deleteProductById
-  )
-  .delete(
-    "/delete-user/:user_id",
-    protectedMiddleware,
-    isVerified,
-    adminWork,
-    deleteUserFromAdmin
-  );
+  .delete("/delete-product/:product_id", deleteProductById)
+  .delete("/delete-user/:user_id", deleteUserFromAdmin);
 
 export default adminRouter;
