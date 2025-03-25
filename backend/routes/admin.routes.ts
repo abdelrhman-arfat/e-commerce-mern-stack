@@ -16,17 +16,18 @@ import {
 
 const adminRouter = Router();
 
+adminRouter.use(protectedMiddleware, isVerified, adminWork);
+
 adminRouter
-  .use(protectedMiddleware, isVerified, adminWork)
   .post("/new-product", upload.single("image"), addNewProduct)
   .post("/new-category", upload.single("image"), createNewCategory)
-  .delete("/delete-/:category_id", deleteCategory)
   .patch(
     "/update-product/:product_id",
     upload.single("image"),
     updateProductDate
   )
   .delete("/delete-product/:product_id", deleteProductById)
-  .delete("/delete-user/:user_id", deleteUserFromAdmin);
+  .delete("/delete-user/:user_id", deleteUserFromAdmin)
+  .delete("/delete-category/:category_id", deleteCategory);
 
 export default adminRouter;
