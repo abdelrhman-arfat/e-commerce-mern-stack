@@ -9,6 +9,7 @@ import orderRouter from "./routes/orders.routes.js";
 import userRouter from "./routes/user.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import favRouter from "./routes/fav.routes.js";
+import cartRouter from "./routes/cart.routes.js";
 
 const app: Express = express();
 
@@ -28,8 +29,9 @@ app.use(
 app.use("/api/auth", authRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/orders", orderRouter);
-app.use("/api/favorites" , favRouter);
+app.use("/api/favorites", favRouter);
 app.use("/api/users", userRouter);
+app.use("/api/cart", cartRouter);
 app.use("/api/admin", adminRouter);
 
 app.use("*", async (_, res: Response) => {

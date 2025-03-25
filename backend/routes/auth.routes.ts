@@ -4,6 +4,7 @@ import {
   signUP,
   logOut,
   verificationAccount,
+  refreshToken
 } from "../controllers/auth.controller.js";
 import loginLimiter from "../middleware/loginLimiter.js";
 import signUpLimiter from "../middleware/signUpLimiter.js";
@@ -33,6 +34,7 @@ authRouter
   .post("/sign-up", signUpLimiter,signUpValidator, signUP)
   .post("/login", loginLimiter, loginValidator, login)
   .post("/verify-account", protectedMiddleware, verificationAccount)
+  .get("/refresh-token", protectedMiddleware , refreshToken)
   .post("/logout", protectedMiddleware, logOut);
 
 export default authRouter;

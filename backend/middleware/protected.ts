@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { JWT_SECRET, NODE_ENV } from "../constants/envVar";
 
 declare global {
   namespace Express {
@@ -35,7 +36,7 @@ const protectedMiddleware = async (
       return;
     }
 
-    const deCoded = await jwt.verify(token, process.env.JWT_SECRET as string);
+    const deCoded = await jwt.verify(token, JWT_SECRET as string);
 
     if (!deCoded) {
       res.status(401).json({
@@ -44,6 +45,20 @@ const protectedMiddleware = async (
         results: [],
         message: "Not authenticated",
       });
+
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+
       return;
     }
 

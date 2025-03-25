@@ -3,11 +3,15 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../schemas/userSchema.js";
 import webAccessToken from "../utils/webAccessToken.js";
-import webRefreshToken from "../utils/webRefreshToken.js";
-import { isValidObjectId, ObjectId } from "mongoose";
-import { JWT_SECRET, NODE_ENV } from "../constants/envVar.js";
+import { isValidObjectId } from "mongoose";
+import {
+  JWT_REFRESH_SECRET,
+  JWT_SECRET,
+  NODE_ENV,
+} from "../constants/envVar.js";
 import sendEmailForVerification from "../utils/sendEmail.js";
 import { validationResult } from "express-validator";
+import webRefreshToken from "../utils/webRefreshToken.js";
 const signUP = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password, confirmPassword, email, fullname } = req.body;
@@ -301,4 +305,106 @@ const verificationAccount = async (req: Request, res: Response) => {
   }
 };
 
-export { signUP, login, logOut, verificationAccount };
+const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const refreshToken = req.cookies.jwt;
+    if (!refreshToken) {
+      res.status(401).json({
+        message: "Missing refresh token",
+        error: "Missing refresh token",
+        results: null,
+        code: 401,
+      });
+      return;
+    }
+
+    const deCoded = jwt.verify(
+      refreshToken,
+      JWT_REFRESH_SECRET as string
+    ) as jwt.JwtPayload;
+
+    if (!deCoded || !isValidObjectId(deCoded._id)) {
+      res.status(401).json({
+        message: "Invalid or expired refresh token",
+        error: "Invalid or expired refresh token",
+        results: null,
+        code: 401,
+      });
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+      return;
+    }
+    const userInfo = {
+      _id: deCoded._id,
+      username: deCoded.username,
+      email: deCoded.email,
+      role: deCoded.role,
+      isVerified: deCoded.isVerified,
+    };
+    const token = await webAccessToken(userInfo);
+    if (!token) {
+      res.status(500).json({
+        message: "Internal error occurred with create new token",
+        error: "internal error occurred",
+        results: null,
+        code: 500,
+      });
+      return;
+    }
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 15,
+      sameSite: "strict",
+    });
+    res.status(200).json({
+      message: "Refresh token updated successfully",
+      error: null,
+      results: null,
+      code: 200,
+    });
+    return;
+  } catch (err) {
+    const error = err as Error;
+    if (err instanceof jwt.JsonWebTokenError) {
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+      res.status(401).json({
+        message: "Invalid token",
+        error: err.message,
+        results: null,
+        code: 401,
+      });
+      return;
+    }
+    res.status(500).json({
+      error: error.message,
+      message: "internal error occurred",
+      results: null,
+      code: 500,
+    });
+    return;
+  }
+};
+export { signUP, login, logOut, verificationAccount, refreshToken };
