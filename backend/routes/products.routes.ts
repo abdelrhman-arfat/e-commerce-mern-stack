@@ -5,6 +5,8 @@ import {
   addOrDeleteLikeToProduct,
   addCommentToProduct,
   deleteComment,
+  getProductByCategory,
+  getRandomProducts
 } from "../controllers/products.controller.js";
 import protectedMiddleware from "../middleware/protected.js";
 import isVerified from "../middleware/isVerified.js";
@@ -13,8 +15,9 @@ const productsRouter = Router();
 
 productsRouter
   .get("/", getAllProducts)
+  .get("/random-products" , getRandomProducts)
   .get("/:product_id", getProductById)
-
+  .get("/by-category/:name" , getProductByCategory)
   .delete(
     "/delete-comment/:product_id",
     protectedMiddleware,

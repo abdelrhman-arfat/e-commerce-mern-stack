@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* ---------------------------- category slider scroller -------------------------------- */
+#category-slider::-webkit-scrollbar {
+  height: 8px;
+}
+#category-slider::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+#category-slider::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+#category-slider::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+/* ---------------------------- category slider scroller -------------------------------- */

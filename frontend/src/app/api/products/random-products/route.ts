@@ -1,10 +1,11 @@
+import app from "@/app/utils/axios_setting";
 import { NextResponse } from "next/server";
 
-import app from "@/app/utils/axios_setting";
 export async function GET() {
   try {
-    const response = await app.get("/category");
-    return NextResponse.json(response.data);
+    const res = await app.get(`/products/random-products`);
+    const data = res.data;
+    return NextResponse.json(data);
   } catch (err) {
     const error = err as Error;
     return NextResponse.json({ message: error.message }, { status: 500 });

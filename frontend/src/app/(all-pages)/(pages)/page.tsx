@@ -1,12 +1,14 @@
 import HomeHero from "@/app/_components/pages/home/HomeHero";
 import SecondSection from "@/app/_components/pages/home/SecondSection";
+import ThirdHeroSection from "@/app/_components/pages/home/ThirdHeroSection";
 import React from "react";
 const HomePage = () => {
   return (
-    <main className="w-[90%] flex-col flex gap-8 mx-auto min-h-screen">
+    <div>
       <HomeHero />
       <SecondSection />
-    </main>
+      <ThirdHeroSection />
+    </div>
   );
 };
 

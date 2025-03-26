@@ -18,6 +18,7 @@ const HomeHero = () => {
           </Link>
         </div>
         <Image
+          priority
           src={"/mainImage.jpg"}
           alt="Yes babe"
           style={{

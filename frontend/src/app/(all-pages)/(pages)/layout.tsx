@@ -8,7 +8,9 @@ export default function RootLayout({
   return (
     <div className="w-full">
       <MainNav />
-      {children}
+      <main className="w-[90%] flex-col flex gap-8 mx-auto min-h-screen">
+        {children}
+      </main>
     </div>
   );
 }

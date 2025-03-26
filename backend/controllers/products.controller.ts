@@ -3,38 +3,53 @@ import Product from "../schemas/productSchema.js";
 import { isValidObjectId } from "mongoose";
 import { deleteExistImage } from "../config/cloudinary.js";
 
+const getRandomProducts = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const products = await Product.aggregate([{ $sample: { size: 4 } }]).exec();
+
+    res.status(200).json({
+      message: "Random Products fetched successfully",
+      error: null,
+      results: products,
+      code: 200,
+    });
+  } catch (error) {
+    const err = error as Error;
+    res.status(500).json({
+      message: "Internal server error",
+      error: err.message,
+      results: null,
+      code: 500,
+    });
+  }
+};
+
 const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const limit = parseInt(req.query.limit as string, 10) || 12;
-    const skip = (page - 1) * limit;
+    const { page = 1, limit = 15 } = req.query;
+    const skip = (+page - 1) * +limit;
 
-    const totalProducts = await Product.countDocuments();
-    const products = await Product.find()
-
-      .populate({
-        path: "likes.user",
-        select: "username email fullname",
-      })
-      .limit(+limit)
-      .skip(skip)
-      .lean();
-    if (!products.length) {
-      res.status(404).json({
-        message: "No products found",
-        error: null,
-        results: [],
-        code: 404,
-      });
-      return;
-    }
+    const [totalData, products] = await Promise.all([
+      Product.countDocuments(),
+      Product.find()
+        .populate({
+          path: "likes.user",
+          select: "username email fullname",
+        })
+        .limit(+limit)
+        .skip(skip)
+        .lean(),
+    ]);
 
     res.status(200).json({
       message: "Products fetched successfully",
       error: null,
-      totalProducts,
+      totalData,
       currentPage: +page,
-      totalPages: Math.ceil(totalProducts / +limit),
+      totalPages: Math.ceil(totalData / +limit),
       results: products,
       code: 200,
     });
@@ -499,6 +514,37 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getProductByCategory = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.params;
+    if (!name) {
+      res.status(400).json({
+        message: "Category name is required",
+        error: null,
+        code: 400,
+        results: null,
+      });
+      return;
+    }
+
+    const products = await Product.find({ category: name });
+
+    res.status(200).json({
+      message: "products fetched successfully",
+      code: 200,
+      results: products,
+      error: null,
+    });
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+      code: 500,
+      results: null,
+    });
+  }
+};
 export {
   addOrDeleteLikeToProduct,
   updateProductDate,
@@ -507,5 +553,7 @@ export {
   addCommentToProduct,
   getAllProducts,
   deleteProductById,
+  getProductByCategory,
   deleteComment,
+  getRandomProducts,
 };

@@ -39,13 +39,6 @@ const protectedMiddleware = async (
     const deCoded = await jwt.verify(token, JWT_SECRET as string);
 
     if (!deCoded) {
-      res.status(401).json({
-        error: null,
-        code: 401,
-        results: [],
-        message: "Not authenticated",
-      });
-
       res.clearCookie("jwt", {
         httpOnly: true,
         secure: NODE_ENV === "production",
@@ -58,6 +51,12 @@ const protectedMiddleware = async (
         maxAge: 0,
         sameSite: "strict",
       });
+      res.status(401).json({
+        error: null,
+        code: 401,
+        results: [],
+        message: "Not authenticated",
+      });
 
       return;
     }
@@ -66,6 +65,29 @@ const protectedMiddleware = async (
     next();
   } catch (err) {
     const error = err as Error;
+
+    if (error instanceof jwt.JsonWebTokenError) {
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        maxAge: 0,
+        sameSite: "strict",
+      });
+      res.status(401).json({
+        error: null,
+        code: 401,
+        results: [],
+        message: "Not authenticated",
+      });
+      return;
+    }
+
     res.status(500).json({
       message: "Bad Request",
       code: 500,
