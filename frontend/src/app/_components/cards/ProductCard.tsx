@@ -5,10 +5,10 @@ import React from "react";
 
 const ProductCard = ({ item }: { item: TProduct }) => {
   return (
-    <div className=" min-w-60 group sm:min-w-64 md:min-w-72">
+    <div className=" bg-gray-500 animate-pulse rounded-md min-w-40 max-w-[450px] group ">
       <div className="group-hover:flex none">ddd</div>
-      <div className="relative  flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg ">
-        <div className="relative h-40 m-2.5 overflow-hidden text-white rounded-md">
+      <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg ">
+        <div className="relative h-44 m-2.5 overflow-hidden text-white rounded-md">
           <Image
             src={item.image}
             alt={item.title}

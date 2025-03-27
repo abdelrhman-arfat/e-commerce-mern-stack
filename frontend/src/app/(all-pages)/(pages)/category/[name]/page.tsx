@@ -1,6 +1,6 @@
 // app/(all-pages)/(pages)/category/[name]/page.tsx
 import CategoriesData from "@/app/_components/common/CategoriesData";
-import ProductCard from "@/app/_components/common/ProductCard";
+import ProductCard from "@/app/_components/cards/ProductCard";
 import { TProduct } from "@/app/types/productType";
 import axios from "axios";
 import Link from "next/link";
