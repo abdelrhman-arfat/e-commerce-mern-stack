@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, Middleware } from "@reduxjs/toolkit";
 import { ecommerceAPI } from "../RTK-query/RTK_Query";
 import { persistReduced } from "../redux-persist/PersistSetting";
 import { persistStore } from "redux-persist";
@@ -17,8 +17,7 @@ const app_store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }).concat(ecommerceAPI.middleware as any),
+    }).concat(ecommerceAPI.middleware as Middleware),
   devTools: process.env.NODE_ENV === "development",
 });
 
