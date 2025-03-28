@@ -1,11 +1,12 @@
 import { TCategories } from "@/app/types/CategoryType";
 import { TProducts } from "@/app/types/productType";
+import { API_URL } from "@/app/utils/constants/api_url";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const ecommerceAPI = createApi({
   reducerPath: "ecommerceAPI",
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
+    baseUrl: API_URL,
   }),
   endpoints: (builder) => ({
     getAllCategories: builder.query<TCategories, void>({
@@ -22,5 +23,8 @@ export const ecommerceAPI = createApi({
     }),
   }),
 });
-export const { useGetRandomProductsQuery,useGetAllCategoriesQuery, useGetAllProductsQuery } =
-  ecommerceAPI;
+export const {
+  useGetRandomProductsQuery,
+  useGetAllCategoriesQuery,
+  useGetAllProductsQuery,
+} = ecommerceAPI;

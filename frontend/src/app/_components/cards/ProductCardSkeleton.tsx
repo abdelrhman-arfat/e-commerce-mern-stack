@@ -1,6 +1,6 @@
 const ProductCardSkeleton = () => {
   return (
-    <div className=" bg-gray-500 flex-1 animate-pulse rounded-md min-w-40 max-w-[450px] group ">
+    <div className=" bg-gray-500  animate-pulse rounded-md w-full group ">
       <div className="group-hover:flex none"></div>
       <div className="relative  flex flex-col  bg-gray-400 animate-pulse  shadow-sm border border-slate-200 rounded-lg ">
         <div className="relative h-[230px] m-2.5 overflow-hidden px-4  bg-gray-300 animate-pulse text-white rounded-md"></div>

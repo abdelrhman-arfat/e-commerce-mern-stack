@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import AppProvider from "./_RTK/provider/AppProvider";
+import { Toaster } from "react-hot-toast";
+import RefreshToken from "./_components/common/RefreshToken";
 
 const roboto = Roboto({ subsets: ["latin"], weight: "400" });
 
@@ -23,7 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} antialiased`}>
-        <AppProvider>{children}</AppProvider>
+        <Toaster position="top-center" />
+        <AppProvider>
+          <RefreshToken />
+          {children}
+        </AppProvider>
       </body>
     </html>
   );

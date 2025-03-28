@@ -8,16 +8,15 @@ import ProductCard from "../../cards/ProductCard";
 // some random products:
 const ThirdHeroSection = () => {
   const { data, isLoading, isError } = useGetRandomProductsQuery();
-
   if (isLoading) {
     return (
-      <div className="flex justify-between flex-wrap">
+      <ProductDiv>
         {Array(10)
           .fill(null)
           .map((_, index) => (
             <ProductCardSkeleton key={index + "product-card-skeleton"} />
           ))}
-      </div>
+      </ProductDiv>
     );
   }
 
@@ -25,7 +24,6 @@ const ThirdHeroSection = () => {
     return <p className="text-red-600">Error fetching products.</p>;
   }
 
-  console.log(data);
   return (
     <section>
       {data?.results?.length ? (

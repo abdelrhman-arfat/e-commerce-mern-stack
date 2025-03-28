@@ -76,15 +76,15 @@ const signUP = async (req: Request, res: Response): Promise<void> => {
 
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      secure: NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      sameSite: "strict",
     });
     res.cookie("token", accessToken, {
       httpOnly: true,
-      secure: NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 15, // 15 Min
-      sameSite: "strict",
     });
 
     res.status(201).json({
@@ -168,15 +168,15 @@ const login = async (
 
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      secure: NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      sameSite: "strict",
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
     res.cookie("token", accessToken, {
-      httpOnly: true,
-      secure: NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 15, // 15 Min
-      sameSite: "strict",
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
     });
 
     res.status(200).json({
@@ -206,15 +206,15 @@ const logOut = async (req: Request, res: Response): Promise<void> => {
   try {
     res.clearCookie("jwt", {
       httpOnly: true,
-      secure: NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
       maxAge: 0,
-      sameSite: "strict",
     });
     res.clearCookie("token", {
       httpOnly: true,
-      secure: NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
       maxAge: 0,
-      sameSite: "strict",
     });
 
     res.status(200).json({
@@ -306,8 +306,10 @@ const verificationAccount = async (req: Request, res: Response) => {
 };
 
 const refreshToken = async (req: Request, res: Response) => {
+  console.log(req.cookies);
   try {
     const refreshToken = req.cookies.jwt;
+
     if (!refreshToken) {
       res.status(401).json({
         message: "Missing refresh token",
@@ -318,10 +320,10 @@ const refreshToken = async (req: Request, res: Response) => {
       return;
     }
 
-    const deCoded = jwt.verify(
+    const deCoded = (await jwt.verify(
       refreshToken,
       JWT_REFRESH_SECRET as string
-    ) as jwt.JwtPayload;
+    )) as jwt.JwtPayload;
 
     if (!deCoded || !isValidObjectId(deCoded._id)) {
       res.status(401).json({
@@ -332,15 +334,15 @@ const refreshToken = async (req: Request, res: Response) => {
       });
       res.clearCookie("jwt", {
         httpOnly: true,
-        secure: NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
         maxAge: 0,
-        sameSite: "strict",
       });
       res.clearCookie("token", {
         httpOnly: true,
-        secure: NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
         maxAge: 0,
-        sameSite: "strict",
       });
       return;
     }
@@ -351,6 +353,7 @@ const refreshToken = async (req: Request, res: Response) => {
       role: deCoded.role,
       isVerified: deCoded.isVerified,
     };
+
     const token = await webAccessToken(userInfo);
     if (!token) {
       res.status(500).json({
@@ -361,34 +364,34 @@ const refreshToken = async (req: Request, res: Response) => {
       });
       return;
     }
-
     res.cookie("token", token, {
       httpOnly: true,
-      secure: NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 15,
-      sameSite: "strict",
     });
     res.status(200).json({
       message: "Refresh token updated successfully",
       error: null,
-      results: null,
+      results: deCoded,
       code: 200,
     });
     return;
   } catch (err) {
+    console.log("error");
     const error = err as Error;
     if (err instanceof jwt.JsonWebTokenError) {
       res.clearCookie("jwt", {
         httpOnly: true,
-        secure: NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
         maxAge: 0,
-        sameSite: "strict",
       });
       res.clearCookie("token", {
         httpOnly: true,
-        secure: NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
         maxAge: 0,
-        sameSite: "strict",
       });
       res.status(401).json({
         message: "Invalid token",

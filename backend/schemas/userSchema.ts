@@ -42,7 +42,6 @@ const UserSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
     minlength: 8,
-    maxlength:16,
     select: false,
   },
   profilePicture: {

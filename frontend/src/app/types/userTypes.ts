@@ -1,7 +1,10 @@
 export type TUser = {
-  _id?: string;
-  username?: string;
-  email?: string;
-  fullname?: string;
-  profilePicture?: string;
+  isAuthenticated: boolean;
+  user: {
+    _id?: string;
+    username?: string;
+    email?: string;
+    fullname?: string;
+    profilePicture?: string;
+  };
 };

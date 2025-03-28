@@ -41,15 +41,15 @@ const protectedMiddleware = async (
     if (!deCoded) {
       res.clearCookie("jwt", {
         httpOnly: true,
-        secure: NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
         maxAge: 0,
-        sameSite: "strict",
       });
       res.clearCookie("token", {
         httpOnly: true,
-        secure: NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
         maxAge: 0,
-        sameSite: "strict",
       });
       res.status(401).json({
         error: null,
@@ -69,15 +69,15 @@ const protectedMiddleware = async (
     if (error instanceof jwt.JsonWebTokenError) {
       res.clearCookie("jwt", {
         httpOnly: true,
-        secure: NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
         maxAge: 0,
-        sameSite: "strict",
       });
       res.clearCookie("token", {
         httpOnly: true,
-        secure: NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
         maxAge: 0,
-        sameSite: "strict",
       });
       res.status(401).json({
         error: null,
@@ -89,7 +89,7 @@ const protectedMiddleware = async (
     }
 
     res.status(500).json({
-      message: "Bad Request",
+      message: "internal error",
       code: 500,
       results: null,
       error: error.message,

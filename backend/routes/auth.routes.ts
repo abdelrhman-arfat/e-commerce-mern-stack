@@ -32,7 +32,7 @@ const authRouter = Router();
 
 authRouter
   .post("/sign-up", signUpLimiter, signUpValidator, signUP)
-  .post("/login", loginLimiter, loginValidator, login)
+  .post("/login",  loginValidator, login)
   .post("/verify-account", protectedMiddleware, verificationAccount)
   .get("/refresh-token", protectedMiddleware, refreshToken)
   .post("/logout", protectedMiddleware, logOut);
