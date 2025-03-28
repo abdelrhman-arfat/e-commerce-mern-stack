@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { login, logout } from "@/app/_RTK/redux-slices/authSlice";
 import useAppDispatch from "@/app/hooks/AppDispatch";
 import app from "@/app/utils/axios_setting";
@@ -23,12 +23,18 @@ const RefreshToken = () => {
     }
   }, [dispatch]);
 
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     handleRefreshToken();
-    const intervalId = setInterval(() => {
+
+    intervalRef.current = setInterval(() => {
       handleRefreshToken();
     }, 1000 * 60 * 15);
-    return () => clearInterval(intervalId);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, [handleRefreshToken]);
 
   return null;
