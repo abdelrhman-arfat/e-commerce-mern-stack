@@ -5,8 +5,8 @@ import React from "react";
 
 const ProductCard = ({ item }: { item: TProduct }) => {
   return (
-    <div className="bg-gray-500 animate-pulse rounded-md w-full group ">
-      <div className="group-hover:flex none">ddd</div>
+    <div className="rounded-md w-full group ">
+      <div className="group-hover:flex none">add to fav</div>
       <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg ">
         <div className="relative h-44 m-2.5 overflow-hidden text-white rounded-md">
           <Image
@@ -22,7 +22,7 @@ const ProductCard = ({ item }: { item: TProduct }) => {
         </div>
         <div className="p-4">
           <div className="mb-4 rounded-full bg-cyan-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">
-            {item.price}
+            {item.price}$
           </div>
           <h6 className="mb-2 text-slate-800 text-xl font-semibold">
             {item.title}
