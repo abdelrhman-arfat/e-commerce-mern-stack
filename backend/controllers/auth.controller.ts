@@ -306,7 +306,6 @@ const verificationAccount = async (req: Request, res: Response) => {
 };
 
 const refreshToken = async (req: Request, res: Response) => {
-  console.log(req.cookies);
   try {
     const refreshToken = req.cookies.jwt;
 
@@ -378,7 +377,6 @@ const refreshToken = async (req: Request, res: Response) => {
     });
     return;
   } catch (err) {
-    console.log("error");
     const error = err as Error;
     if (err instanceof jwt.JsonWebTokenError) {
       res.clearCookie("jwt", {

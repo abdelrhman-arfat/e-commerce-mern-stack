@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Product from "../schemas/productSchema.js";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, ObjectId } from "mongoose";
 import { deleteExistImage } from "../config/cloudinary.js";
 
 const getRandomProducts = async (
@@ -148,6 +148,8 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
       price: +price,
       category,
       creator: userReq._id,
+      likes: [],
+      comments: [],
     });
 
     await newProduct.save();
@@ -323,8 +325,8 @@ const addOrDeleteLikeToProduct = async (
       return;
     }
 
-    const likeIndex = product.likes.findIndex(
-      (like) => like.user.toString() === userReq._id.toString()
+    const likeIndex = product.likes.findIndex((like) =>
+      like.user.equals(userReq?._id)
     );
 
     if (likeIndex !== -1) {
@@ -449,6 +451,16 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
 
     const userReq = req?.user;
 
+    if (!userReq || !isValidObjectId(userReq._id)) {
+      res.status(401).json({
+        message: "you should login first and try again",
+        error: null,
+        code: 401,
+        results: null,
+      });
+      return;
+    }
+
     const product = await Product.findById(product_id).populate({
       path: "comments.user",
       select: "-password",
@@ -479,10 +491,9 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
     }
 
     const comment = product.comments[commentIndex];
-
     if (
-      !userReq._id.equals(product.creator) &&
-      !userReq._id.equals(comment.user) &&
+      userReq?._id?.toString() !== product.creator.toString() &&
+      userReq?._id?.toString() !== comment.user.toString() &&
       userReq.role !== "ADMIN"
     ) {
       res.status(403).json({

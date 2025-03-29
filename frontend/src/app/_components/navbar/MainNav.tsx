@@ -1,3 +1,4 @@
+import IfTheUserLogin from "./IfTheUserLogin";
 import LinksOfNavbar from "./LinksOfNavbar";
 
 const MainNav = () => {
@@ -7,7 +8,6 @@ const MainNav = () => {
     // { label: "About", href: "/about" },
     // { label: "Contact", href: "/contact" },
     // { label: "Login", href: "/login" },
-    { label: "Register", href: "/register" },
     // { label: "Cart", href: "/cart" },
     // { label: "Profile", href: "/profile" },
   ];
@@ -24,6 +24,7 @@ const MainNav = () => {
               href={link.href}
             />
           ))}
+          <IfTheUserLogin />
         </ul>
       </nav>
     </header>

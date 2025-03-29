@@ -27,15 +27,24 @@ const deleteExistImage = async (oldImage: string) => {
   try {
     if (!oldImage) return;
 
-    const filename = oldImage.split("/").pop(); // the last part of the filename -> ex: http://...../151512115.png
-    const public_id = filename ? filename.split(".")[0] : null; // the id.{png,jpg..} -> ex: id = 151512115
-
-    if (!public_id) {
-      console.error("Invalid image URL: Cannot extract public_id.");
+    const encodedFilename = oldImage.split("/").pop();
+    if (!encodedFilename) {
+      console.error("Unable to extract filename from URL.");
       return;
     }
 
-    await cloudinary.uploader.destroy(public_id); // delete image from cloudinary cloud.
+    const decodedFilename = decodeURIComponent(encodedFilename);
+
+    const baseName = decodedFilename.split(".")[0];
+
+    if (!baseName) {
+      console.error("Invalid image URL: Cannot extract baseName.");
+      return;
+    }
+
+    const public_id = `uploads/${baseName}`;
+
+    await cloudinary.uploader.destroy(public_id);
   } catch (err: any) {
     console.error("Error deleting image:", err.message);
   }

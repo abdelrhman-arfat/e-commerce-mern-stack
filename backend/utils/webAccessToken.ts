@@ -13,7 +13,7 @@ const webAccessToken = async (userInfo: TUserInfo) => {
         isVerified: userInfo.isVerified,
       },
       JWT_SECRET as string,
-      { expiresIn: "15m" }
+      { expiresIn: "20m" }
     );
     return accessToken;
   } catch (error) {

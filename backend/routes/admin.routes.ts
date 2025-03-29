@@ -12,6 +12,7 @@ import {
   createNewCategory,
   deleteUserFromAdmin,
   deleteCategory,
+  getAllUsers,
 } from "../controllers/admin.controller.js";
 
 const adminRouter = Router();
@@ -26,6 +27,7 @@ adminRouter
     upload.single("image"),
     updateProductDate
   )
+  .get("/all-users", getAllUsers)
   .delete("/delete-product/:product_id", deleteProductById)
   .delete("/delete-user/:user_id", deleteUserFromAdmin)
   .delete("/delete-category/:category_id", deleteCategory);

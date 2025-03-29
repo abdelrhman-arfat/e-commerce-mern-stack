@@ -6,6 +6,7 @@ export type TProduct = {
   description: string;
   price: number;
   image: string;
+  category: string;
 };
 
 export type TProducts = TResponse<TProduct>;

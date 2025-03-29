@@ -10,8 +10,7 @@ const deleteUserFromAdmin = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { user_id } = req.params;
-
+    const user_id = req.params.user_id;
     if (!isValidObjectId(user_id)) {
       res.status(400).json({
         message: "Invalid user id",
@@ -146,4 +145,55 @@ const deleteCategory = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
-export { deleteUserFromAdmin, deleteCategory, createNewCategory };
+
+const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const { page = 1, limit = 30 } = req.query;
+    const skip = (+page - 1) * +limit;
+
+    if (+page < 1) {
+      res.status(400).json({
+        message: "Invalid page number",
+        error: "Invalid page number",
+        results: null,
+        code: 400,
+      });
+      return;
+    }
+
+    const [users, totalData] = await Promise.all([
+      User.find().select("-password -username -__v").skip(skip).limit(+limit),
+      User.countDocuments(),
+    ]);
+
+    if (!users.length) {
+      res.status(404).json({
+        message: "No users found",
+        error: null,
+        results: null,
+        code: 404,
+      });
+      return; // Exit the function early if no users found. 404 is a good status code for this situation.
+    }
+
+    res.status(200).json({
+      message: "users fetched successfully",
+      results: users,
+      totalData: totalData,
+      currentPage: +page,
+      totalPages: Math.ceil(totalData / +limit),
+      code: 200,
+      error: null,
+    });
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      message: "internal error occurred",
+      error: error.message,
+      code: 500,
+      results: null,
+    });
+  }
+};
+
+export { deleteUserFromAdmin, getAllUsers, deleteCategory, createNewCategory };

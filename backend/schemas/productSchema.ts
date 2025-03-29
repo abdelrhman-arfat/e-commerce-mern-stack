@@ -49,7 +49,6 @@ const ProductSchema = new mongoose.Schema<IProducts>(
         user: {
           type: mongoose.Types.ObjectId,
           ref: "users",
-          required: true,
         },
         data: {
           type: Date,
@@ -65,8 +64,6 @@ const ProductSchema = new mongoose.Schema<IProducts>(
         user: {
           type: mongoose.Types.ObjectId,
           ref: "users",
-          required: true,
-          unique: true, // Ensures only one like per user per product
         },
         data: {
           type: Date,

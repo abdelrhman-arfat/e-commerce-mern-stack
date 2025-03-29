@@ -1,14 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, NODE_ENV } from "../constants/envVar.js";
+import { JWT_SECRET } from "../constants/envVar.js";
+import { ObjectId } from "mongoose";
+import { TUserInfo } from "../types/userInfo.js";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: any;
+      user: {
+        _id?: ObjectId;
+        username?: string;
+        email?: string;
+        isVerified?: boolean;
+        role?: string;
+      };
     }
   }
 }
+
 const protectedMiddleware = async (
   req: Request,
   res: Response,
@@ -25,75 +34,56 @@ const protectedMiddleware = async (
       });
       return;
     }
-    const refreshToken = req.cookies.jwt;
-    if (!refreshToken) {
-      res.status(401).json({
-        error: null,
-        results: [],
-        code: 401,
-        message: "Not authenticated",
-      });
-      return;
-    }
 
-    const deCoded = await jwt.verify(token, JWT_SECRET as string);
+    const decoded = jwt.verify(token, JWT_SECRET as string) as TUserInfo;
 
-    if (!deCoded) {
-      res.clearCookie("jwt", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 0,
-      });
+    if (!decoded) {
       res.clearCookie("token", {
         httpOnly: true,
         secure: true,
         sameSite: "none",
         maxAge: 0,
       });
-      res.status(401).json({
-        error: null,
-        code: 401,
-        results: [],
-        message: "Not authenticated",
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 0,
       });
 
+      res.status(401).json({
+        error: null,
+        results: [],
+        code: 401,
+        message: "Not authenticated",
+      });
       return;
     }
 
-    req.user = deCoded;
+    req.user = decoded;
+
     next();
-  } catch (err) {
-    const error = err as Error;
+  } catch (error) {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 0,
+    });
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 0,
+    });
 
-    if (error instanceof jwt.JsonWebTokenError) {
-      res.clearCookie("jwt", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 0,
-      });
-      res.clearCookie("token", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 0,
-      });
-      res.status(401).json({
-        error: null,
-        code: 401,
-        results: [],
-        message: "Not authenticated",
-      });
-      return;
-    }
-
-    res.status(500).json({
-      message: "internal error",
-      code: 500,
-      results: null,
-      error: error.message,
+    res.status(401).json({
+      error: null,
+      code: 401,
+      results: [],
+      message: "Not authenticated",
     });
   }
 };
+
 export default protectedMiddleware;

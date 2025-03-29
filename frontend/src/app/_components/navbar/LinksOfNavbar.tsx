@@ -10,8 +10,8 @@ const LinksOfNavbar = ({ label, href }: { label: string; href: string }) => {
     <li>
       <Link
         className={`${
-          isActive && "bg-six text-white"
-        } px-3 py-1.5 rounded-md hover:bg-seven hover:text-white duration-300`}
+          isActive && "border-five border-b-2 "
+        } px-3 py-1.5 hover:rounded-md hover:border-b-0 hover:bg-seven hover:text-white duration-300`}
         href={href}
       >
         {label}
