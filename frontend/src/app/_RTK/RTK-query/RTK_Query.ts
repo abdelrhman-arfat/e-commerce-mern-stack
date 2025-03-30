@@ -14,6 +14,16 @@ export const ecommerceAPI = createApi({
     getAllCategories: builder.query<TCategories, void>({
       query: () => "/category",
     }),
+    getAllInFav: builder.query<TProducts, void>({
+      query: () => "/favorites",
+    }),
+    getAllOrders: builder.query<TProducts, { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 30 }) =>
+        `/orders?page=${+page || 1}&limit=${+limit || 30}`,
+    }),
+    getAllInCart: builder.query<TProducts, void>({
+      query: () => "/cart",
+    }),
     getAllProducts: builder.query<TProducts, { page?: number; limit?: number }>(
       {
         query: ({ page = 1, limit = 12 }) =>
@@ -34,4 +44,7 @@ export const {
   useGetAllCategoriesQuery,
   useGetAllProductsQuery,
   useGetAllUserQuery,
+  useGetAllInFavQuery,
+  useGetAllInCartQuery,
+  useGetAllOrdersQuery,
 } = ecommerceAPI;

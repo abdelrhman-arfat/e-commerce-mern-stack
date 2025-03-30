@@ -1,14 +1,36 @@
 "use client";
-import { useGetRandomProductsQuery } from "@/app/_RTK/RTK-query/RTK_Query";
+import {
+  useGetAllInCartQuery,
+  useGetAllInFavQuery,
+  useGetRandomProductsQuery,
+} from "@/app/_RTK/RTK-query/RTK_Query";
 import React from "react";
 import ProductCardSkeleton from "../../cards/ProductCardSkeleton";
 import ProductDiv from "../../common/ProductDiv";
 import ProductCard from "../../cards/ProductCard";
+import { TProduct } from "@/app/types/productType";
 
 // some random products:
 const ThirdHeroSection = () => {
-  const { data, isLoading, isError } = useGetRandomProductsQuery();
-  if (isLoading) {
+  const {
+    data: ProductData,
+    isLoading: productIsLoading,
+    isError: productIsError,
+  } = useGetRandomProductsQuery();
+  const { data: favDate, refetch: favRefetch } = useGetAllInFavQuery();
+  const inFav =
+    Array.isArray(favDate?.results) &&
+    favDate?.results?.map((product: TProduct) => product.productId);
+
+  const { data: cartData, refetch: cartRefetch } = useGetAllInCartQuery();
+
+  const inCart = Array.isArray(cartData?.results)
+    ? cartData?.results.map((product: TProduct) => product.productId)
+    : Array.isArray(cartData?.results?.products)
+    ? cartData?.results?.products.map((product: TProduct) => product.productId)
+    : [];
+
+  if (productIsLoading) {
     return (
       <ProductDiv>
         {Array(10)
@@ -20,16 +42,25 @@ const ThirdHeroSection = () => {
     );
   }
 
-  if (isError) {
+  if (productIsError) {
     return <p className="text-red-600">Error fetching products.</p>;
   }
 
   return (
     <section>
-      {data?.results?.length ? (
+      {Array.isArray(ProductData?.results) && ProductData?.results?.length ? (
         <ProductDiv>
-          {data?.results?.map((item) => (
-            <ProductCard item={item} key={item._id + "product-card"} />
+          {ProductData?.results?.map((item) => (
+            <ProductCard
+              cartRefetch={cartRefetch}
+              isInCart={inCart?.includes(item._id) || false}
+              favRefetch={favRefetch}
+              isInFav={
+                (Array.isArray(inFav) && inFav?.includes(item._id)) || false
+              }
+              item={item}
+              key={item._id + "product-card"}
+            />
           ))}
         </ProductDiv>
       ) : (

@@ -1,17 +1,27 @@
 "use client";
-import { useGetAllProductsQuery } from "@/app/_RTK/RTK-query/RTK_Query";
+import {
+  useGetAllCategoriesQuery,
+  useGetAllProductsQuery,
+} from "@/app/_RTK/RTK-query/RTK_Query";
 import Image from "next/image";
 import React, { useState } from "react";
 import AddProductModal from "./AddProductModal";
 import Swal from "sweetalert2";
 import app from "@/app/utils/axios_setting";
 import toast from "react-hot-toast";
+import { TProduct } from "@/app/types/productType";
+import AddCategoryModal from "./AddCategoryModal";
+import { TCategory } from "@/app/types/CategoryType";
+import ChangeProduct from "../../btns/ChangeProduct";
 
 const ProductsTable = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, refetch } = useGetAllProductsQuery({
     page,
   });
+
+  const { data: categoryData, refetch: categoryRefetch } =
+    useGetAllCategoriesQuery();
 
   if (isLoading) return <p className="text-center text-lg">Loading...</p>;
   if (isError)
@@ -23,8 +33,12 @@ const ProductsTable = () => {
 
   return (
     <>
-      <div className="w-full text-center">
-        <AddProductModal refetch={refetch} />
+      <div className="w-full flex gap-3 items-center justify-center">
+        <AddProductModal
+          categories={categoryData?.results as TCategory[]}
+          refetch={refetch}
+        />
+        <AddCategoryModal refetch={categoryRefetch} />
       </div>
       <div className="flex p-4 justify-between items-center">
         <button
@@ -62,78 +76,88 @@ const ProductsTable = () => {
                 <th className="p-3 text-left text-sm font-semibold">
                   Category
                 </th>
-                <th className="p-3 text-left text-sm font-semibold">Actions</th>
+                <th className="p-3 text-right pr-20 text-sm font-semibold w-[150px]">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
-              {data?.results?.map((product) => (
-                <tr
-                  key={product._id}
-                  className="border-b text-sm transition duration-200 hover:bg-gray-50"
-                >
-                  <td className="p-3">
-                    <Image
-                      src={product.image || "/placeholder.png"}
-                      alt={product.title}
-                      width={48}
-                      height={48}
-                      className="w-12 h-12 rounded-md object-cover border border-gray-300"
-                      priority
-                    />
-                  </td>
-                  <td className="p-3">{product.title}</td>
-                  <td className="p-3">${product.price}</td>
-                  <td className="p-3">{product.category}</td>
+              {Array.isArray(data?.results) &&
+                data?.results?.map((product: TProduct) => (
+                  <tr
+                    key={product._id}
+                    className="border-b text-sm transition duration-200 hover:bg-gray-50"
+                  >
+                    <td className="p-3">
+                      <Image
+                        src={product.image || "/placeholder.png"}
+                        alt={product.title}
+                        width={48}
+                        height={48}
+                        className="w-12 h-12 rounded-md object-cover border border-gray-300"
+                        priority
+                      />
+                    </td>
+                    <td className="p-3">{product.title}</td>
+                    <td className="p-3">${product.price}</td>
+                    <td className="p-3">{product.category}</td>
 
-                  <td className="p-3">
-                    <button
-                      onClick={() => {
-                        Swal.fire({
-                          title: "Are you sure?",
-                          text: "You won't be able to revert this!",
-                          icon: "warning",
-                          showCancelButton: true,
-                          confirmButtonColor: "#3085d6",
-                          cancelButtonColor: "#d33",
-                          confirmButtonText: "Yes, delete it!",
-                        }).then(async (result) => {
-                          if (result.isConfirmed) {
-                            toast.promise(
-                              app.delete(
-                                `/admin/delete-product/${product._id}`
-                              ),
-                              {
-                                loading: "Deleting...",
+                    <td className="p-3 text-right">
+                      <div className="flex gap-3 justify-end">
+                        <button
+                          onClick={() => {
+                            Swal.fire({
+                              title: "Are you sure?",
+                              text: "You won't be able to revert this!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Yes, delete it!",
+                            }).then(async (result) => {
+                              if (result.isConfirmed) {
+                                toast.promise(
+                                  app.delete(
+                                    `/admin/delete-product/${product._id}`
+                                  ),
+                                  {
+                                    loading: "Deleting...",
 
-                                success: (response) => {
-                                  if (response.status === 200) {
-                                    refetch();
-                                    return (
-                                      response.data.message ||
-                                      "Success deleting product"
-                                    );
-                                  } else {
-                                    toast.error("Failed to delete product");
+                                    success: (response) => {
+                                      if (response.status === 200) {
+                                        refetch();
+                                        return (
+                                          response.data.message ||
+                                          "Success deleting product"
+                                        );
+                                      } else {
+                                        toast.error("Failed to delete product");
+                                      }
+                                    },
+                                    error: (err) => {
+                                      return (
+                                        err.response?.data?.message ||
+                                        "Failed to create product"
+                                      );
+                                    },
                                   }
-                                },
-                                error: (err) => {
-                                  return (
-                                    err.response?.data?.message ||
-                                    "Failed to create product"
-                                  );
-                                },
+                                );
                               }
-                            );
-                          }
-                        });
-                      }}
-                      className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600 transition duration-200 shadow-md"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                            });
+                          }}
+                          className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600 transition duration-200 shadow-md"
+                        >
+                          Delete
+                        </button>
+                        <ChangeProduct
+                          categories={categoryData?.results as TCategory[]}
+                          refetch={refetch}
+                          product={product}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

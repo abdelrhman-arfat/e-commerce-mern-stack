@@ -4,11 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../schemas/userSchema.js";
 import webAccessToken from "../utils/webAccessToken.js";
 import { isValidObjectId } from "mongoose";
-import {
-  JWT_REFRESH_SECRET,
-  JWT_SECRET,
-  NODE_ENV,
-} from "../constants/envVar.js";
+import { JWT_REFRESH_SECRET, JWT_SECRET } from "../constants/envVar.js";
 import sendEmailForVerification from "../utils/sendEmail.js";
 import { validationResult } from "express-validator";
 import webRefreshToken from "../utils/webRefreshToken.js";
@@ -69,6 +65,7 @@ const signUP = async (req: Request, res: Response): Promise<void> => {
       email: user.email,
       role: user.role,
       isVerified: user.isVerified,
+      fullname: user.fullname,
     };
     await sendEmailForVerification(userInfo);
     const accessToken = await webAccessToken(userInfo);
@@ -101,8 +98,18 @@ const signUP = async (req: Request, res: Response): Promise<void> => {
       },
     });
     return;
-  } catch (err) {
-    const error = err as Error;
+  } catch (error: any) {
+    if (error.message.includes("E11000")) {
+      if (error.keyPattern?.username) {
+        res.status(400).json({ error: "Username already exists." });
+        return;
+      }
+      if (error.keyPattern?.email) {
+        res.status(400).json({ error: "Email already registered." });
+        return;
+      }
+    }
+
     res.status(500).json({
       error: error.message,
       message: "internal error occurred",
@@ -158,6 +165,7 @@ const login = async (
     const userInfo = {
       _id: user._id,
       username: user.username,
+      fullname: user.fullname,
       email: user.email,
       role: user.role,
       isVerified: user.isVerified,

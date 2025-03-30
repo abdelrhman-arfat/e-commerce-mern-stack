@@ -148,8 +148,6 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
       price: +price,
       category,
       creator: userReq._id,
-      likes: [],
-      comments: [],
     });
 
     await newProduct.save();
@@ -178,6 +176,7 @@ const deleteProductById = async (
 ): Promise<void> => {
   try {
     const { product_id } = req.params;
+
     if (!isValidObjectId(product_id)) {
       res.status(400).json({
         message: "Invalid Product ID",

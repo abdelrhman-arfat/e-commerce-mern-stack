@@ -12,7 +12,7 @@ const cartRouter = Router();
 
 cartRouter
   .get("/", protectedMiddleware, isVerified, getCarts)
-  .post("/", protectedMiddleware, isVerified, addToCart)
+  .post("/:product_id", protectedMiddleware, isVerified, addToCart)
   .delete(
     "/delete-cart/:product_id",
     protectedMiddleware,

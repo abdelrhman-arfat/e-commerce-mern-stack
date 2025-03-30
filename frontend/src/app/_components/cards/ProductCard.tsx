@@ -2,19 +2,37 @@ import { TProduct } from "@/app/types/productType";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import AddToFav from "../btns/AddToFav";
+import AddToCart from "../btns/AddToCart";
 
-const ProductCard = ({ item }: { item: TProduct }) => {
+const ProductCard = ({
+  favRefetch,
+  cartRefetch,
+  item,
+  isInFav,
+  isInCart,
+}: {
+  isInCart: boolean;
+  cartRefetch: () => void;
+  isInFav: boolean;
+  favRefetch: () => void;
+  item: TProduct;
+}) => {
   return (
     <div className="rounded-md w-full group ">
-      <div className="group-hover:flex none">add to fav</div>
-      <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg ">
+      <div className="relative flex flex-col pt-3 my-2 bg-white shadow-sm border border-slate-200 rounded-lg ">
+        <div className="w-[90%] mx-auto flex items-center justify-between ">
+          <AddToFav isInFav={isInFav} _id={item._id} refetch={favRefetch} />
+          <AddToCart ifInCart={isInCart} _id={item._id} refetch={cartRefetch} />
+        </div>
         <div className="relative h-44 m-2.5 overflow-hidden text-white rounded-md">
           <Image
             src={item.image}
             alt={item.title}
             fill
+            priority
             sizes="100%"
-            className="rounded-md duration-300 hover:scale-[1.5]"
+            className="rounded-md duration-300 hover:scale-[1.1]"
             style={{
               objectFit: "cover",
             }}
@@ -22,7 +40,7 @@ const ProductCard = ({ item }: { item: TProduct }) => {
         </div>
         <div className="p-4">
           <div className="mb-4 rounded-full bg-cyan-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">
-            {item.price}$
+            {item.price} $
           </div>
           <h6 className="mb-2 text-slate-800 text-xl font-semibold">
             {item.title}

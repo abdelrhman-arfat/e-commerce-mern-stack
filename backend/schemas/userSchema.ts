@@ -55,6 +55,20 @@ const UserSchema = new mongoose.Schema<IUser>({
   },
 });
 
+UserSchema.post("save", function (error: any, doc: any, next: any) {
+  if (error.name === "MongoServerError" && error.code === 11000) {
+    if (error.keyPattern.username) {
+      next(new Error("Username is already taken. Please choose another one."));
+    } else if (error.keyPattern.email) {
+      next(new Error("Email is already registered. Try logging in instead."));
+    } else {
+      next(new Error("Duplicate key error."));
+    }
+  } else {
+    next(error);
+  }
+});
+
 const User = mongoose.models.users || mongoose.model("users", UserSchema);
 
 export default User;

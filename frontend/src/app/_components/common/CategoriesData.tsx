@@ -26,7 +26,7 @@ const CategoriesData = () => {
 
   return (
     <div className="mt-6">
-      {data?.results?.length ? (
+      {Array.isArray(data?.results) && data?.results?.length ? (
         <>
           <h2 className="text-xl sm:text-2xl md:text-3xl uppercase font-bold text-center text-gray-900">
             Our Categories

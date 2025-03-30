@@ -23,7 +23,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: CORS_ORIGIN, // my web site url
+    origin: CORS_ORIGIN, // my Website url ex:"http://localhost:3000"
     credentials: true, // send cookies
   })
 );

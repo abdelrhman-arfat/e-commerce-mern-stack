@@ -23,6 +23,7 @@ const cartSchema = new mongoose.Schema<ICart>(
           type: Number,
           default: 1,
           min: 1,
+          max: 20,
         },
       },
     ],

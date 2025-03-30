@@ -60,8 +60,8 @@ const addToCart = async (req: Request, res: Response): Promise<void> => {
       });
       return;
     }
-    const { product_id, quantity } = req.body;
-    if (!product_id || !quantity) {
+    const { product_id } = req.params;
+    if (!isValidObjectId(product_id)) {
       res.status(400).json({
         message: "invalid data",
         code: 400,
@@ -71,26 +71,34 @@ const addToCart = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const userCart = await Cart.findOneAndUpdate(
-      {
-        userId: userReq._id,
-      },
-      {
-        $push: {
-          products: {
-            productId: product_id,
-            quantity,
-          },
-        },
-      },
-      { new: true, upsert: true } // if not found create new one
+    const updatedCart = await Cart.findOneAndUpdate(
+      { userId: userReq._id, "products.productId": product_id },
+      { $inc: { "products.$.quantity": 1 } },
+      { new: true }
     );
 
+    if (!updatedCart) {
+      await Cart.findOneAndUpdate(
+        { userId: userReq._id },
+        {
+          $push: { products: { productId: product_id, quantity: 1 } },
+        },
+        { new: true, upsert: true }
+      );
+      res.status(201).json({
+        message: "product added to cart successfully",
+        error: null,
+        code: 200,
+        results: updatedCart,
+      });
+      return;
+    }
+
     res.status(200).json({
-      message: "product added to cart successfully",
+      message: "product count increase successfully",
       error: null,
       code: 200,
-      results: userCart,
+      results: updatedCart,
     });
     return;
   } catch (err) {

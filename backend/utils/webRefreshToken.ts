@@ -8,6 +8,7 @@ const webRefreshToken = async (userInfo: TUserInfo) => {
       {
         _id: userInfo._id,
         email: userInfo.email,
+        fullname: userInfo.fullname,
         username: userInfo.username,
         role: userInfo.role,
         isVerified: userInfo.isVerified,

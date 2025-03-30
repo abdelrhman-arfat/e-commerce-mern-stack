@@ -51,7 +51,7 @@ const getUserFavorites = async (req: Request, res: Response): Promise<void> => {
 const addOrDeleteToFav = async (req: Request, res: Response): Promise<void> => {
   try {
     const userReq = req?.user;
-    const { product_id } = req.body;
+    const { product_id } = req.params;
 
     if (!isValidObjectId(userReq._id) || !isValidObjectId(product_id)) {
       res.status(400).json({
@@ -65,7 +65,8 @@ const addOrDeleteToFav = async (req: Request, res: Response): Promise<void> => {
 
     const favorite = await Fav.findOne({
       productId: product_id,
-    }).populate("productId", "title price image _id");
+      userId: userReq._id,
+    });
 
     if (favorite) {
       await Fav.findByIdAndDelete(favorite._id);

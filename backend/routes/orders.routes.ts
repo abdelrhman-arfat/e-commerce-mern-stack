@@ -12,7 +12,7 @@ import {
 const orderRouter = Router();
 
 orderRouter
-  .get("/", getAllOrders)
+  .get("/", protectedMiddleware, isVerified, adminWork, getAllOrders)
   .post("/new-order", protectedMiddleware, isVerified, adminWork, createOrder)
   .patch(
     "/order-update/:order_id",
@@ -25,7 +25,6 @@ orderRouter
     "/delete-order/:order_id",
     protectedMiddleware,
     isVerified,
-    adminWork,
     deleteOrderById
   );
 

@@ -1,17 +1,10 @@
 "use client";
-import { TCategory } from "@/app/types/CategoryType";
 import app from "@/app/utils/axios_setting";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FiX, FiUpload } from "react-icons/fi";
 
-const AddProductModal = ({
-  refetch,
-  categories,
-}: {
-  categories: TCategory[];
-  refetch: () => void;
-}) => {
+const AddCategoryModal = ({ refetch }: { refetch: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
 
@@ -20,23 +13,23 @@ const AddProductModal = ({
     const formData = new FormData(e.currentTarget);
 
     toast.promise(
-      app.post("/admin/new-product", formData, {
+      app.post("/admin/new-category", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       }),
       {
-        loading: "Creating product...",
+        loading: "Creating category...",
         success: (res) => {
           if (res.status !== 201) {
-            return res.data.message || "Failed to create product";
+            return res.data.message || "Failed to create category";
           }
           refetch();
-          toast.success(res.data.message || "New product created successfully");
+          toast.success(res.data.message || "New category created successfully");
           setSelectedFile(null);
         },
         error: (err) => {
-          return err.response?.data?.message || "Failed to create product";
+          return err.response?.data?.message || "Failed to create category";
         },
       }
     );
@@ -48,7 +41,7 @@ const AddProductModal = ({
         onClick={() => setIsOpen(true)}
         className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition"
       >
-        New Product
+        New Category
       </button>
 
       {isOpen && (
@@ -62,71 +55,26 @@ const AddProductModal = ({
             </button>
 
             <h2 className="text-xl font-bold mb-5 text-center text-gray-800">
-              Add New Product
+              Add New Category
             </h2>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="block text-gray-700 font-medium mb-1">
-                  Product Name
+                  Category Name
                 </label>
                 <input
                   type="text"
-                  name="title"
+                  name="name"
                   required
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                  placeholder="Enter product name"
+                  placeholder="Enter category name"
                 />
               </div>
 
               <div>
                 <label className="block text-gray-700 font-medium mb-1">
-                  Price ($)
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                  placeholder="Enter price"
-                />
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">
-                  Category
-                </label>
-                <select
-                  name="category"
-                  required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                >
-                  <option value="" disabled selected>
-                    Select a category
-                  </option>
-                  {categories.map((category) => (
-                    <option key={category._id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">
-                  Description
-                </label>
-                <textarea
-                  name="description"
-                  required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                  placeholder="Enter description..."
-                ></textarea>
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">
-                  Product Image
+                  Category Image
                 </label>
                 <div className="relative w-full">
                   <input
@@ -156,7 +104,7 @@ const AddProductModal = ({
                 type="submit"
                 className="mt-3 w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-500 transition"
               >
-                Add Product
+                Add Category
               </button>
             </form>
           </div>
@@ -166,4 +114,4 @@ const AddProductModal = ({
   );
 };
 
-export default AddProductModal;
+export default AddCategoryModal;

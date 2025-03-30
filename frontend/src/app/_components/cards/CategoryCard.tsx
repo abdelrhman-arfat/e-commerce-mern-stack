@@ -21,6 +21,7 @@ const CategoryCard = ({ item }: { item: TCategory }) => {
             objectFit: "cover",
             objectPosition: "center",
           }}
+          className="rounded-full"
         ></Image>
       </div>
       <div>

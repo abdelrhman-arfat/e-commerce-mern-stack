@@ -45,6 +45,7 @@ const LoginPage = () => {
             objectFit: "cover",
           }}
           fill
+          priority
           sizes="100%"
           src="/LoginImage.jpg"
           alt="Login image"

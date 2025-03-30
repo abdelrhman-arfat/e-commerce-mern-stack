@@ -9,6 +9,7 @@ const webAccessToken = async (userInfo: TUserInfo) => {
         _id: userInfo._id,
         email: userInfo.email,
         username: userInfo.username,
+        fullname: userInfo.fullname,
         role: userInfo.role,
         isVerified: userInfo.isVerified,
       },

@@ -67,34 +67,17 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
 };
 const getAllOrders = async (req: Request, res: Response): Promise<void> => {
   try {
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const limit = parseInt(req.query.limit as string, 10) || 12;
-    const skip = (page - 1) * limit;
+    const { page = 1, limit = 30 } = req.query;
+    const skip = (+page - 1) * +limit;
 
     const [orders, totalOrders] = await Promise.all([
       Order.find()
         .limit(+limit)
         .skip(skip)
-        .populate({
-          path: "productId",
-          select: "title price",
-        })
-        .populate({
-          path: "userId",
-          select: "username email fullname",
-        }),
+        .populate("productId", "title price image")
+        .populate("userId", "fullname profileImage email"),
       Order.countDocuments(),
     ]);
-
-    if (!orders.length) {
-      res.status(404).json({
-        message: "No orders found",
-        error: null,
-        results: [],
-        code: 404,
-      });
-      return;
-    }
 
     res.status(200).json({
       message: "Orders fetched successfully",
