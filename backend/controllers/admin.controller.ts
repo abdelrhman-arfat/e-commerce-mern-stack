@@ -196,4 +196,56 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-export { deleteUserFromAdmin, getAllUsers, deleteCategory, createNewCategory };
+const updateUserRole = async (req: Request, res: Response) => {
+  try {
+    const { user_id, role } = req.query;
+    if (!isValidObjectId(user_id)) {
+      res.status(400).json({
+        message: "Invalid user id",
+        error: "Invalid user id",
+        results: null,
+        code: 400,
+      });
+      return;
+    }
+
+    const user = await User.findByIdAndUpdate(user_id, {
+      $set: {
+        role,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({
+        message: "User not found",
+        error: null,
+        results: null,
+        code: 404,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "User role updated successfully",
+      error: null,
+      results: user,
+      code: 200,
+    });
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      message: "internal error occurred",
+      error: error.message,
+      code: 500,
+      results: null,
+    });
+  }
+};
+
+export {
+  deleteUserFromAdmin,
+  getAllUsers,
+  deleteCategory,
+  updateUserRole,
+  createNewCategory,
+};

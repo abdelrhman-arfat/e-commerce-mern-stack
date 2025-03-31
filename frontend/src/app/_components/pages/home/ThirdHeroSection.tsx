@@ -27,7 +27,7 @@ const ThirdHeroSection = () => {
   const inCart = Array.isArray(cartData?.results)
     ? cartData?.results.map((product: TProduct) => product.productId)
     : Array.isArray(cartData?.results?.products)
-    ? cartData?.results?.products.map((product: TProduct) => product.productId)
+    ? cartData?.results?.products?.map((product) => product.productId)
     : [];
 
   if (productIsLoading) {
@@ -51,16 +51,17 @@ const ThirdHeroSection = () => {
       {Array.isArray(ProductData?.results) && ProductData?.results?.length ? (
         <ProductDiv>
           {ProductData?.results?.map((item) => (
-            <ProductCard
-              cartRefetch={cartRefetch}
-              isInCart={inCart?.includes(item._id) || false}
-              favRefetch={favRefetch}
-              isInFav={
-                (Array.isArray(inFav) && inFav?.includes(item._id)) || false
-              }
-              item={item}
-              key={item._id + "product-card"}
-            />
+            <div key={item._id + "product-card"}>
+              <ProductCard
+                cartRefetch={cartRefetch}
+                favRefetch={favRefetch}
+                isInCart={inCart.includes(item._id)}
+                isInFav={
+                  (Array.isArray(inFav) && inFav?.includes(item._id)) || false
+                }
+                item={item}
+              />
+            </div>
           ))}
         </ProductDiv>
       ) : (

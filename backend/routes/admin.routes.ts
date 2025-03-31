@@ -13,6 +13,7 @@ import {
   deleteUserFromAdmin,
   deleteCategory,
   getAllUsers,
+  updateUserRole,
 } from "../controllers/admin.controller.js";
 
 const adminRouter = Router();
@@ -29,6 +30,7 @@ adminRouter
   )
   .get("/all-users", getAllUsers)
   .delete("/delete-product/:product_id", deleteProductById)
+  .patch('/change-user-role' , updateUserRole)
   .delete("/delete-user/:user_id", deleteUserFromAdmin)
   .delete("/delete-category/:category_id", deleteCategory);
 

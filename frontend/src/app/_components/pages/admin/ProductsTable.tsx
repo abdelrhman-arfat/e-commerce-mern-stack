@@ -13,6 +13,8 @@ import { TProduct } from "@/app/types/productType";
 import AddCategoryModal from "./AddCategoryModal";
 import { TCategory } from "@/app/types/CategoryType";
 import ChangeProduct from "../../btns/ChangeProduct";
+import Loader from "../../lodingAndErrors/Loader";
+import Error from "../../lodingAndErrors/Error";
 
 const ProductsTable = () => {
   const [page, setPage] = useState(1);
@@ -23,14 +25,13 @@ const ProductsTable = () => {
   const { data: categoryData, refetch: categoryRefetch } =
     useGetAllCategoriesQuery();
 
-  if (isLoading) return <p className="text-center text-lg">Loading...</p>;
-  if (isError)
-    return (
-      <p className="text-center text-lg text-red-600">
-        Error fetching products
-      </p>
-    );
-
+    if (isLoading) {
+      return <Loader />;
+    }
+  
+    if (isError) {
+      return <Error />;
+    }
   return (
     <>
       <div className="w-full flex gap-3 items-center justify-center">

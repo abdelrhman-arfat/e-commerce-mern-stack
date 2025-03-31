@@ -75,7 +75,7 @@ const getAllOrders = async (req: Request, res: Response): Promise<void> => {
         .limit(+limit)
         .skip(skip)
         .populate("productId", "title price image")
-        .populate("userId", "fullname profileImage email"),
+        .populate("userId", "fullname profilePicture email"),
       Order.countDocuments(),
     ]);
 

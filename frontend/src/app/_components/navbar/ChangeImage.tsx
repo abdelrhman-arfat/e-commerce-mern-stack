@@ -56,8 +56,8 @@ const ChangeImage = ({
       >
         {preview ? (
           <Image
-            src={userImage}
-            alt={name}
+            src={preview}
+            alt={name + "image-in-change-image"}
             fill
             sizes="100%"
             priority
@@ -67,7 +67,20 @@ const ChangeImage = ({
           />
         ) : (
           <span className="text-2xl font-semibold text-gray-700">
-            {name.charAt(0).toUpperCase()}
+            {userImage !== "" ? (
+              <Image
+                src={userImage}
+                alt={name}
+                fill
+                sizes="100%"
+                priority
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              name.charAt(0).toUpperCase()
+            )}
           </span>
         )}
         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">

@@ -13,8 +13,8 @@ const ProductCard = ({
   isInCart,
 }: {
   isInCart: boolean;
-  cartRefetch: () => void;
   isInFav: boolean;
+  cartRefetch: () => void;
   favRefetch: () => void;
   item: TProduct;
 }) => {
@@ -47,6 +47,9 @@ const ProductCard = ({
           </h6>
           <p className="text-slate-600 line-clamp-2  font-light">
             {item.description}
+          </p>
+          <p className="bg-neutral-700 text-white w-fit px-2 py-1 rounded-md my-3 line-clamp-2  text-sm">
+            {item.category}
           </p>
         </div>
 

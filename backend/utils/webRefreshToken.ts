@@ -12,6 +12,7 @@ const webRefreshToken = async (userInfo: TUserInfo) => {
         username: userInfo.username,
         role: userInfo.role,
         isVerified: userInfo.isVerified,
+        profilePicture: userInfo.profilePicture,
       },
       JWT_REFRESH_SECRET as string,
       { expiresIn: "7d" }

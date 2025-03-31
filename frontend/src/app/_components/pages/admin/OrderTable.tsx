@@ -4,17 +4,20 @@ import Swal from "sweetalert2";
 import React, { useState } from "react";
 import app from "@/app/utils/axios_setting";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import Loader from "../../lodingAndErrors/Loader";
+import Error from "../../lodingAndErrors/Error";
 
 const OrderTable = () => {
   const [page, setPage] = useState<number>(1);
 
   const { data, isLoading, isError, refetch } = useGetAllOrdersQuery({ page });
-
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
+
   if (isError) {
-    return <p>Error: Failed to fetch orders</p>;
+    return <Error />;
   }
 
   return (
@@ -55,6 +58,9 @@ const OrderTable = () => {
                   Customer
                 </th>
                 <th className="py-3 px-1 text-left text-sm font-semibold">
+                  Product Image
+                </th>
+                <th className="py-3 px-1 text-left text-sm font-semibold">
                   Total Price
                 </th>
                 <th className="py-3 px-1 text-left text-sm font-semibold">
@@ -81,23 +87,38 @@ const OrderTable = () => {
                         order?.userId?.fullname}
                     </td>
                     <td className="py-3 px-1">
+                      {typeof order.productId === "object" &&
+                      order?.productId?.image ? (
+                        <div className="relative w-14 h-14">
+                          <Image
+                            src={order.productId?.image}
+                            alt="Product"
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-md border"
+                          />
+                        </div>
+                      ) : (
+                        "No Image"
+                      )}
+                    </td>
+                    <td className="py-3 px-1">
                       {typeof order?.productId === "object" &&
-                      order?.productId?.price !== undefined
+                      order?.productId?.price !== undefined &&
+                      order.quantity !== undefined
                         ? `$${(
-                            +order.productId.price * +order.quantity
+                            +order.productId.price * +order?.quantity
                           ).toFixed(2)}`
                         : ""}
                     </td>
                     <td className="py-3 px-1">{order?.quantity}</td>
                     <td
                       className="py-3 px-1 text-[12px] font-semibold"
-                      style={{
-                        color: order.isDone ? "green" : "red",
-                      }}
+                      style={{ color: order.isDone ? "green" : "red" }}
                     >
                       {order.isDone ? "Completed" : "Pending"}
                     </td>
-                    <td className="py-3 px-1 flex gap-2">
+                    <td className="py-3  px-1 ">
                       <button
                         onClick={() => {
                           Swal.fire({
@@ -126,22 +147,22 @@ const OrderTable = () => {
                             }
                           });
                         }}
-                        className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600 transition duration-200 shadow-md"
+                        className="rounded bg-red-500 mx-1 px-3 py-1 text-white hover:bg-red-600 transition duration-200 shadow-md"
                       >
                         Delete
                       </button>
 
                       {!order.isDone && (
                         <button
-                          onClick={async () => {
+                          onClick={() => {
                             Swal.fire({
                               title: "Are you sure?",
-                              text: "You won't be able to revert this!",
+                              text: "Mark this order as done?",
                               icon: "warning",
                               showCancelButton: true,
                               confirmButtonColor: "#3085d6",
                               cancelButtonColor: "#d33",
-                              confirmButtonText: "Yes, delete it!",
+                              confirmButtonText: "Yes, mark as done!",
                             }).then(async (result) => {
                               if (result.isConfirmed) {
                                 toast.promise(
@@ -150,18 +171,12 @@ const OrderTable = () => {
                                   ),
                                   {
                                     loading: "Updating...",
-                                    success: (response) => {
-                                      return (
-                                        response.data.message ||
-                                        "updated successfully"
-                                      );
-                                    },
-                                    error: (err) => {
-                                      return (
-                                        err.response.data.message ||
-                                        "can't update the state"
-                                      );
-                                    },
+                                    success: (response) =>
+                                      response.data.message ||
+                                      "Updated successfully",
+                                    error: (err) =>
+                                      err.response.data.message ||
+                                      "Can't update the state",
                                   }
                                 );
                                 refetch();

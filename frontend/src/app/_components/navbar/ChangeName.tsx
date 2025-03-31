@@ -11,7 +11,10 @@ const ChangeName = ({ currentName }: { currentName: string }) => {
   const dispatch = useAppDispatch();
 
   const handleSave = () => {
-    if (newName.trim() === "") return;
+    if (newName.length < 5) {
+      toast.error("Name must be at least 5 characters long.");
+      return;
+    }
     toast.promise(app.patch("/users/change-name", { newName }), {
       loading: "Updating name...",
       success: (response) => {
@@ -33,6 +36,7 @@ const ChangeName = ({ currentName }: { currentName: string }) => {
             type="text"
             className="border p-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto max-w-xs"
             value={newName}
+            required
             onChange={(e) => setNewName(e.target.value)}
           />
           <div className="flex w-full gap-2">

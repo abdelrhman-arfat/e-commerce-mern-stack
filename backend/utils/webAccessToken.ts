@@ -12,6 +12,8 @@ const webAccessToken = async (userInfo: TUserInfo) => {
         fullname: userInfo.fullname,
         role: userInfo.role,
         isVerified: userInfo.isVerified,
+
+        profilePicture: userInfo.profilePicture,
       },
       JWT_SECRET as string,
       { expiresIn: "20m" }

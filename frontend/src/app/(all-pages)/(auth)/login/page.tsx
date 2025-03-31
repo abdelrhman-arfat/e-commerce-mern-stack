@@ -105,8 +105,8 @@ const LoginPage = () => {
           <div className="mt-4 text-sm text-gray-600 text-center">
             <p>
               Create Account?{" "}
-              <Link href="#" className="text-black hover:underline">
-                Login here
+              <Link href="/sign-up" className="text-black hover:underline">
+                sign up here
               </Link>
             </p>
           </div>

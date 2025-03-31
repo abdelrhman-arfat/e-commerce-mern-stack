@@ -3,7 +3,7 @@ export type TResponse<T> = {
     | T[]
     | {
         products?: {
-          quantity: number;
+          quantity?: number;
           productId: string;
           _id: string;
           title: string;

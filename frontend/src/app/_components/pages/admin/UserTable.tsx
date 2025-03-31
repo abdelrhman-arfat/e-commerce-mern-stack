@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import useUserSelector from "@/app/hooks/AppSelector";
 import app from "@/app/utils/axios_setting";
 import toast from "react-hot-toast";
+import Loader from "../../lodingAndErrors/Loader";
+import Error from "../../lodingAndErrors/Error";
 
 const UserTable = () => {
   const [page, setPage] = useState<number>(1);
@@ -15,12 +17,12 @@ const UserTable = () => {
   const me = useUserSelector();
 
   if (isLoading) {
-    return <p>Loading...</p>;
-  }
-  if (isError) {
-    return <p>Error: in get data</p>;
+    return <Loader />;
   }
 
+  if (isError) {
+    return <Error />;
+  }
   return (
     <>
       <div>
@@ -113,40 +115,80 @@ const UserTable = () => {
                       {me?.user?._id === user._id ? (
                         <div>Your account</div>
                       ) : (
-                        <button
-                          onClick={() => {
-                            Swal.fire({
-                              title: "Are you sure?",
-                              text: "You won't be able to revert this!",
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Yes, delete it!",
-                            }).then(async (result) => {
-                              if (result.isConfirmed) {
-                                const res = await app.delete(
-                                  `/admin/delete-user/${user._id}`
-                                );
-                                if (res.status !== 200) {
-                                  toast.error(
-                                    res.data.message || "Failed to delete user."
+                        <div className="flex h-full items-center">
+                          <button
+                            onClick={() => {
+                              Swal.fire({
+                                title: "Are you sure?",
+                                text: "You won't be able to revert this!",
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Yes, delete it!",
+                              }).then(async (result) => {
+                                if (result.isConfirmed) {
+                                  const res = await app.delete(
+                                    `/admin/delete-user/${user._id}`
                                   );
+                                  if (res.status !== 200) {
+                                    toast.error(
+                                      res.data.message ||
+                                        "Failed to delete user."
+                                    );
+                                    return;
+                                  }
+                                  toast.success(
+                                    res.data.message ||
+                                      "user deleted successfully"
+                                  );
+                                  refetch();
                                   return;
                                 }
-                                toast.success(
-                                  res.data.message ||
-                                    "user deleted successfully"
-                                );
-                                refetch();
-                                return;
+                              });
+                            }}
+                            className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600 transition duration-200 shadow-md"
+                          >
+                            Delete
+                          </button>
+                          <button
+                            onClick={async () => {
+                              const result = await Swal.fire({
+                                title: "Change Role?",
+                                text: `Are you sure you want to make this user an ${
+                                  user.role === "USER" ? "ADMIN" : "USER"
+                                }`,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Yes, change it!",
+                              });
+
+                              if (result.isConfirmed) {
+                                toast
+                                  .promise(
+                                    app.patch(
+                                      `/admin/change-user-role?user_id=${
+                                        user._id
+                                      }&role=${
+                                        user.role === "USER" ? "ADMIN" : "USER"
+                                      }`
+                                    ),
+                                    {
+                                      loading: "Changing role...",
+                                      success: "User role updated to Admin!",
+                                      error: "Failed to change role.",
+                                    }
+                                  )
+                                  .then(() => refetch()); // تحديث البيانات بعد تغيير الدور
                               }
-                            });
-                          }}
-                          className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600 transition duration-200 shadow-md"
-                        >
-                          Delete
-                        </button>
+                            }}
+                            className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 transition duration-200 shadow-md"
+                          >
+                            Role
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>

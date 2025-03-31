@@ -5,6 +5,9 @@ import bcrypt from "bcryptjs";
 import { deleteExistImage } from "../config/cloudinary.js";
 import { NODE_ENV } from "../constants/envVar.js";
 import Product from "../schemas/productSchema.js";
+import webAccessToken from "../utils/webAccessToken.js";
+import webRefreshToken from "../utils/webRefreshToken.js";
+import isVerified from "../middleware/isVerified.js";
 
 const changePassword = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -120,6 +123,32 @@ const changeImage = async (req: Request, res: Response) => {
     user.profilePicture = image;
 
     await user.save();
+
+    const userInfo = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+      fullname: user.fullname,
+      profilePicture: user.profilePicture,
+    };
+
+    const accessToken = await webAccessToken(userInfo);
+    const refreshToken = await webRefreshToken(userInfo);
+
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+    res.cookie("token", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 15, // 15 Min
+    });
 
     res.status(200).json({
       message: "profile picture saved successfully",
@@ -243,6 +272,30 @@ const changeName = async (req: Request, res: Response) => {
       });
       return;
     }
+    const userInfo = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+      fullname: user.fullname,
+      profilePicture: user.profilePicture,
+    };
+    const accessToken = await webAccessToken(userInfo);
+    const refreshToken = await webRefreshToken(userInfo);
+
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+    res.cookie("token", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 15, // 15 Min
+    });
 
     res.status(200).json({
       message: "Name updated successfully ",

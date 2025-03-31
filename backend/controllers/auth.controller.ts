@@ -66,6 +66,7 @@ const signUP = async (req: Request, res: Response): Promise<void> => {
       role: user.role,
       isVerified: user.isVerified,
       fullname: user.fullname,
+      profilePicture: user.profilePicture,
     };
     await sendEmailForVerification(userInfo);
     const accessToken = await webAccessToken(userInfo);
@@ -165,10 +166,11 @@ const login = async (
     const userInfo = {
       _id: user._id,
       username: user.username,
-      fullname: user.fullname,
       email: user.email,
       role: user.role,
       isVerified: user.isVerified,
+      fullname: user.fullname,
+      profilePicture: user.profilePicture,
     };
 
     const accessToken = await webAccessToken(userInfo);
@@ -357,7 +359,9 @@ const refreshToken = async (req: Request, res: Response) => {
       _id: deCoded._id,
       username: deCoded.username,
       email: deCoded.email,
+      fullname: deCoded.fullname,
       role: deCoded.role,
+      profilePicture: deCoded.profilePicture,
       isVerified: deCoded.isVerified,
     };
 

@@ -3,6 +3,7 @@ import { login } from "@/app/_RTK/redux-slices/authSlice";
 import useAppDispatch from "@/app/hooks/AppDispatch";
 import app from "@/app/utils/axios_setting";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
@@ -133,6 +134,7 @@ const SignUpPage = () => {
               name="email"
             />
           </div>
+          <Link className="my-2 inline-block text-three hover:text-seven duration-150 " href={"/login"}>have account</Link>
           <div>
             <button
               disabled={isSignUp}

@@ -20,15 +20,6 @@ const getCarts = async (req: Request, res: Response): Promise<void> => {
       userId: userReq._id,
     });
 
-    if (!allCarts) {
-      res.status(404).json({
-        message: "No cart found",
-        code: 404,
-        error: null,
-        results: [],
-      });
-    }
-
     res.status(200).json({
       message: "Carts fetched successfully",
       error: null,

@@ -58,7 +58,7 @@ const UserSetting = ({
                   🛒 Cart
                 </Link>
                 <Link
-                  href="/favorites"
+                  href="/fav"
                   className="text-yellow-500 hover:underline"
                 >
                   ⭐ Favorites
