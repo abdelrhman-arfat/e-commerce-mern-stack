@@ -42,7 +42,7 @@ const changePassword = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const isMatch = await bcrypt.compare(oldPassword, newPassword);
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!isMatch) {
       res.status(400).json({
@@ -92,21 +92,11 @@ const changeImage = async (req: Request, res: Response) => {
       return;
     }
 
-    if (!userReq) {
+    if (!userReq || !isValidObjectId(userReq._id)) {
       res.status(403).json({
         message: "Please login first",
         code: 403,
         error: "Unauthorized",
-        results: [],
-      });
-      return;
-    }
-
-    if (!isValidObjectId(userReq._id)) {
-      res.status(400).json({
-        message: "Invalid user ID",
-        code: 400,
-        error: null,
         results: [],
       });
       return;
@@ -135,7 +125,7 @@ const changeImage = async (req: Request, res: Response) => {
       message: "profile picture saved successfully",
       code: 200,
       error: null,
-      results: null,
+      results: user,
     });
     return;
   } catch (err) {
@@ -216,4 +206,60 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
-export { changePassword, changeImage, deleteUser };
+
+const changeName = async (req: Request, res: Response) => {
+  try {
+    const userReq = req.user;
+    if (!userReq || !isValidObjectId(userReq._id)) {
+      res.status(403).json({
+        message: "Please login first",
+        code: 403,
+        error: "Unauthorized",
+        results: [],
+      });
+      return;
+    }
+
+    const { newName } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      userReq._id,
+      {
+        $set: {
+          fullname: newName,
+        },
+      },
+      {
+        new: true,
+      }
+    ).select("-password -__v");
+
+    if (!user) {
+      res.status(404).json({
+        message: "User not found",
+        code: 404,
+        error: null,
+        results: [],
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Name updated successfully ",
+      error: null,
+      results: user,
+      code: 200,
+    });
+    return;
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      message: error.message,
+      error: "internal error occurred",
+      results: null,
+      code: 500,
+    });
+  }
+};
+
+export { changePassword, changeImage, deleteUser, changeName };
