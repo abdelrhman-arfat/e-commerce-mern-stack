@@ -1,9 +1,11 @@
-import React from 'react'
+import FavoritesProduct from "@/app/_components/pages/fav/FavoritesProduct";
 
-const page = () => {
+const Page = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div>
+      <FavoritesProduct />
+    </div>
+  );
+};
 
-export default page
+export default Page;

@@ -37,6 +37,9 @@ export const ecommerceAPI = createApi({
       query: ({ page = 1, limit = 10 }) =>
         `/admin/all-users?page=${+page || 1}&limit=${+limit || 30}`,
     }),
+    getAllInFavToPage: builder.query<TProducts, void>({
+      query: () => "/favorites/for-page",
+    }),
   }),
 });
 export const {
@@ -46,5 +49,6 @@ export const {
   useGetAllUserQuery,
   useGetAllInFavQuery,
   useGetAllInCartQuery,
+  useGetAllInFavToPageQuery,
   useGetAllOrdersQuery,
 } = ecommerceAPI;

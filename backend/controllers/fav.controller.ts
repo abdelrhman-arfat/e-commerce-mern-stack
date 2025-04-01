@@ -48,6 +48,55 @@ const getUserFavorites = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getUserFavoritesProducts = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userReq = req.user;
+
+    if (!isValidObjectId(userReq._id)) {
+      res.status(400).json({
+        message: "Invalid user id",
+        error: "Invalid user id",
+        results: [],
+        code: 400,
+      });
+      return;
+    }
+
+    const favorites = await Fav.find({
+      userId: userReq._id,
+    }).populate("productId", "title image price category");
+
+    if (!favorites) {
+      res.status(404).json({
+        message: "No favorites found for this user",
+        error: null,
+        results: [],
+        code: 404,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Favorites fetched successfully",
+      error: null,
+      results: favorites,
+      code: 200,
+    });
+  } catch (err) {
+    const error = err as Error;
+
+    res.status(500).json({
+      error: error.message,
+      message: "Internal server error",
+      code: 500,
+      results: [],
+    });
+    return;
+  }
+};
 const addOrDeleteToFav = async (req: Request, res: Response): Promise<void> => {
   try {
     const userReq = req?.user;
@@ -102,4 +151,4 @@ const addOrDeleteToFav = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getUserFavorites, addOrDeleteToFav };
+export { getUserFavorites, addOrDeleteToFav, getUserFavoritesProducts };
