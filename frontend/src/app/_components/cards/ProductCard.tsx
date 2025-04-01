@@ -57,7 +57,7 @@ const ProductCard = ({
         <div className="w-full text-center">
           <Link
             className="px-2 py-1 my-2 bg-four text-white w-[90%] rounded-xl inline-block"
-            href={`/products/by-id/${item._id}`}
+            href={`/by-id/${item._id}`}
           >
             View
           </Link>
