@@ -480,7 +480,6 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
       comment._id.equals(comment_id)
     );
 
-
     if (commentIndex === -1) {
       res.status(400).json({
         message: "no existing comment",
@@ -493,7 +492,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
 
     const comment = product.comments[commentIndex];
     if (
-      userReq?._id?.toString() !== comment.user._id &&
+      userReq?._id?.toString() !== comment.user._id.toString() &&
       userReq.role !== "ADMIN"
     ) {
       res.status(403).json({

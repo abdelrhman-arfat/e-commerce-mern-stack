@@ -194,9 +194,13 @@ const OrderTable = () => {
                                   ),
                                   {
                                     loading: "Updating...",
-                                    success: (response) =>
-                                      response.data.message ||
-                                      "Updated successfully",
+                                    success: (response) => {
+                                      refetch();
+                                      return (
+                                        response.data.message ||
+                                        "Updated successfully"
+                                      );
+                                    },
                                     error: (err) =>
                                       err.response.data.message ||
                                       "Can't update the state",
