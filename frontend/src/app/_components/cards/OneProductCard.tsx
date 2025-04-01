@@ -7,6 +7,7 @@ import AddComment from "../btns/AddComment";
 import useUserSelector from "@/app/hooks/AppSelector";
 import toast from "react-hot-toast";
 import app from "@/app/utils/axios_setting";
+import DeleteComment from "../btns/DeleteComment";
 
 const OneProductCard = ({ id }: { id: string }) => {
   const { data, isError, isLoading, refetch } = useGetProductByIdQuery(id);
@@ -119,34 +120,16 @@ const OneProductCard = ({ id }: { id: string }) => {
                     <p className="text-gray-700">{comment?.comment}</p>
                   </div>
                 </div>
-                {comment?.user?.email === me?.user?.email && (
-                  <button
-                    onClick={() => {
-                      toast.promise(
-                        app.delete(
-                          `/products/delete-comment?product_id=${id}&comment_id=${comment._id}`
-                        ),
-                        {
-                          loading: "delete comment",
-                          success: (res) => {
-                            if (res.status === 200) {
-                              refetch();
-                            }
-                            return res.data.message || "deleted successfully";
-                          },
-                          error: (err) => {
-                            return (
-                              err.response?.data?.message ||
-                              "An error occurred while Deleteing comment"
-                            );
-                          },
-                        }
-                      );
-                    }}
-                    className="text-sm bg-red-500 text-white hover:scale-105 px-2 py-1 rounded-md transition-all duration-300"
-                  >
-                    Delete
-                  </button>
+                {me.user?.role === "ADMIN" ? (
+                  <DeleteComment id={id} refetch={refetch} comment={comment} />
+                ) : (
+                  comment?.user?.email === me?.user?.email && (
+                    <DeleteComment
+                      id={id}
+                      refetch={refetch}
+                      comment={comment}
+                    />
+                  )
                 )}
               </div>
             ))}
