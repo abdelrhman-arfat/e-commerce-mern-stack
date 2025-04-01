@@ -17,6 +17,21 @@ export type TProduct = {
     createdAt: Date;
     updatedAt: Date;
   };
+  products: {
+    productId: {
+      quantity: number;
+      price: number;
+      title: string;
+      image: string;
+      category: string;
+      _id: string;
+    }[];
+    userId: {
+      fullname: string;
+      email: string;
+      _id: string;
+    }[];
+  };
   productId?:
     | {
         quantity: number;

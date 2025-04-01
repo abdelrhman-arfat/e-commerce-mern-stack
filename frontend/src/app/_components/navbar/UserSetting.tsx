@@ -5,6 +5,8 @@ import React, { SetStateAction } from "react";
 import ChangeName from "./ChangeName";
 import ChangePassword from "./ChangePassword";
 import ChangeImage from "./ChangeImage";
+import LogOut from "./LogOut";
+import DeleteAccount from "./DeleteAccount";
 
 const UserSetting = ({
   user,
@@ -16,7 +18,7 @@ const UserSetting = ({
   if (!user?.user) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[3333333333]">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[13]">
       <div className="bg-white p-6 rounded-2xl shadow-xl w-96">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -30,17 +32,19 @@ const UserSetting = ({
         <div className="space-y-3">
           <div>
             <p className="text-gray-600 text-sm">Email</p>
-            <p className="text-lg font-medium">{user.user.email || "N/A"}</p>
+            <p className="text-lg font-medium">{user.user?.email || "N/A"}</p>
           </div>
           <div>
             <p className="text-gray-600 text-sm">Username</p>
-            <p className="text-lg font-medium">{user.user.username || "N/A"}</p>
+            <p className="text-lg font-medium">
+              {user.user?.username || "N/A"}
+            </p>
           </div>
           <div>
             <div>
               <p className="text-gray-600 text-sm ">Full Name</p>
               <p className="text-lg font-medium">
-                {user.user.fullname || "N/A"}
+                {user.user?.fullname || "N/A"}
               </p>
               <ChangeName currentName={user.user.fullname as string} />
             </div>
@@ -57,11 +61,11 @@ const UserSetting = ({
                 <Link href="/cart" className="text-blue-500 hover:underline">
                   🛒 Cart
                 </Link>
-                <Link
-                  href="/fav"
-                  className="text-yellow-500 hover:underline"
-                >
+                <Link href="/fav" className="text-yellow-500 hover:underline">
                   ⭐ Favorites
+                </Link>
+                <Link href="/" className="text-amber-900-50 hover:underline">
+                  🏠 Home
                 </Link>
               </div>
             </div>
@@ -71,13 +75,13 @@ const UserSetting = ({
           <ChangePassword />
         </div>
         <button
-          className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
-          onClick={() => {
-            setIsOpen(false);
-          }}
+          className="absolute top-24 right-5  md:top-10  md:right-10 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition shadow-md"
+          onClick={() => setIsOpen(false)}
         >
-          Close
+          ✕
         </button>
+        <LogOut />
+        <DeleteAccount />
       </div>
     </div>
   );

@@ -11,8 +11,8 @@ import {
 const cartRouter = Router();
 
 cartRouter
-  .get("/", protectedMiddleware, isVerified, getCarts)
-  .post("/:product_id", protectedMiddleware, isVerified, addToCart)
+  .get("/", protectedMiddleware, getCarts)
+  .post("/:product_id", protectedMiddleware, addToCart)
   .delete(
     "/delete-cart/:product_id",
     protectedMiddleware,

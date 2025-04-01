@@ -7,11 +7,34 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import Loader from "../../lodingAndErrors/Loader";
 import Error from "../../lodingAndErrors/Error";
+import Link from "next/link";
+import useUserSelector from "@/app/hooks/AppSelector";
 
 const OrderTable = () => {
+  const me = useUserSelector();
   const [page, setPage] = useState<number>(1);
-
   const { data, isLoading, isError, refetch } = useGetAllOrdersQuery({ page });
+
+  if (me.user?.role === "USER") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 px-4">
+        <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+          <h1 className="text-4xl font-bold text-red-500">Access Denied</h1>
+          <p className="text-gray-600 mt-2">
+            You do not have permission to view this page.
+          </p>
+
+          <div className="mt-4">
+            <Link href="/">
+              <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
+                Go to Home
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (isLoading) {
     return <Loader />;
   }
@@ -84,7 +107,7 @@ const OrderTable = () => {
                     <td className="p-3">{order._id}</td>
                     <td className="py-3 px-1">
                       {typeof order?.userId === "object" &&
-                        order?.userId?.fullname}
+                        order?.userId?.email}
                     </td>
                     <td className="py-3 px-1">
                       {typeof order.productId === "object" &&

@@ -12,7 +12,7 @@ const AddToCart = ({
 }) => {
   return (
     <button
-      className={` rounded-xl hover:scale-105 duration-300
+      className={` rounded-xl hover:scale-105
         ${ifInCart ? "bg-green-500 text-white" : "text-green-500 bg-gray-100 "} 
         `}
       onClick={() => {

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import app from "@/app/utils/axios_setting";
 import { login } from "@/app/_RTK/redux-slices/authSlice";
 import useAppDispatch from "@/app/hooks/AppDispatch";
+import { BsCamera } from "react-icons/bs";
 
 const ChangeImage = ({
   userImage,
@@ -79,7 +80,7 @@ const ChangeImage = ({
                 }}
               />
             ) : (
-              name.charAt(0).toUpperCase()
+              name?.charAt(0)?.toUpperCase() || <BsCamera />
             )}
           </span>
         )}

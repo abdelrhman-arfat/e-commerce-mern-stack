@@ -206,15 +206,15 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
     ]);
 
     res.clearCookie("token", {
-      sameSite: "strict",
       maxAge: 0,
-      secure: NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
       httpOnly: true,
     });
     res.clearCookie("jwt", {
-      sameSite: "strict",
       maxAge: 0,
-      secure: NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
       httpOnly: true,
     });
 

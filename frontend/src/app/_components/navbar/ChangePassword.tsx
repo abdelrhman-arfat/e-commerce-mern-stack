@@ -7,9 +7,19 @@ const ChangePassword = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordMismatch, setPasswordMismatch] = useState(false);
 
   const handleSave = () => {
     if (newPassword.trim().length < 8 || oldPassword.trim().length < 8) return;
+
+    if (newPassword !== confirmPassword) {
+      setPasswordMismatch(true);
+      return;
+    }
+
+    setPasswordMismatch(false);
+
     toast.promise(
       app.patch("users/change-password", {
         oldPassword,
@@ -25,13 +35,15 @@ const ChangePassword = () => {
         },
       }
     );
+
     setIsEditing(false);
     setOldPassword("");
     setNewPassword("");
+    setConfirmPassword("");
   };
 
   return (
-    <div className="flex flex-col gap-3 ">
+    <div className="flex flex-col gap-3">
       {isEditing ? (
         <div className="bg-white p-6 rounded-xl shadow-lg w-80">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">
@@ -54,10 +66,37 @@ const ChangePassword = () => {
               min={8}
               max={16}
               placeholder="New Password"
-              className="border p-2 rounded-lg outline-none focus:ring-2 focus:ring-green-500 w-full"
+              className={`border p-2 rounded-lg outline-none focus:ring-2 w-full ${
+                passwordMismatch
+                  ? "border-red-500 focus:ring-red-500"
+                  : "focus:ring-green-500"
+              }`}
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+                setPasswordMismatch(false);
+              }}
             />
+            <input
+              type="password"
+              required
+              min={8}
+              max={16}
+              placeholder="Confirm Password"
+              className={`border p-2 rounded-lg outline-none focus:ring-2 w-full ${
+                passwordMismatch
+                  ? "border-red-500 focus:ring-red-500"
+                  : "focus:ring-green-500"
+              }`}
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                setPasswordMismatch(false);
+              }}
+            />
+            {passwordMismatch && (
+              <p className="text-red-500 text-sm">Passwords do not match!</p>
+            )}
             <div className="flex justify-between mt-3">
               <button
                 className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition w-[48%]"

@@ -30,16 +30,34 @@ const Page = () => {
   const { data: cartData, refetch: cartRefetch } = useGetAllInCartQuery();
 
   const inCart = Array.isArray(cartData?.results)
-    ? cartData?.results.map((product: TProduct) => product.productId)
+    ? cartData.results.map((product) => {
+        if (
+          typeof product.productId === "object" &&
+          product.productId !== null
+        ) {
+          return (product.productId as { _id: string })._id;
+        }
+        return product.productId;
+      })
     : Array.isArray(cartData?.results?.products)
-    ? cartData?.results?.products.map((product) => product?.productId)
+    ? cartData.results.products.map((product) => {
+        if (
+          typeof product.productId === "object" &&
+          product.productId !== null
+        ) {
+          return (product.productId as { _id: string })._id;
+        }
+        return product.productId;
+      })
     : [];
+
+
   return (
     <div>
       <CategoriesData />
       <h1 className="text-xl my-2">Category: {name}</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-        {Array.isArray(data?.results) &&
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+        {Array.isArray(data?.results) && data.results.length > 0 ? (
           data?.results?.map((item: TProduct, i: number) => (
             <ProductCard
               key={item._id + i + "in-get-by-category"}
@@ -51,7 +69,37 @@ const Page = () => {
               }
               item={item}
             />
-          ))}
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center bg-gray-100 rounded-xl p-6 shadow-md animate-fade-in">
+            <svg
+              className="w-16 h-16 text-gray-400 mb-3"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 10h11M9 21V3m0 0l-3 3m3-3l3 3"
+              />
+            </svg>
+            <h2 className="text-lg font-semibold text-gray-700">
+              No products found in this category.
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Try exploring other categories!
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition"
+            >
+              Refresh
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

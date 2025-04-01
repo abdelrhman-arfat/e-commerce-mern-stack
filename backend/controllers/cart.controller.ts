@@ -18,7 +18,7 @@ const getCarts = async (req: Request, res: Response): Promise<void> => {
 
     const allCarts = await Cart.findOne({
       userId: userReq._id,
-    });
+    }).populate("products.productId", "_id image price title");
 
     res.status(200).json({
       message: "Carts fetched successfully",

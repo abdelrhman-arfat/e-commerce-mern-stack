@@ -23,11 +23,27 @@ const ThirdHeroSection = () => {
     favDate?.results?.map((product: TProduct) => product.productId);
 
   const { data: cartData, refetch: cartRefetch } = useGetAllInCartQuery();
-
+  
   const inCart = Array.isArray(cartData?.results)
-    ? cartData?.results.map((product: TProduct) => product.productId)
+    ? cartData.results.map((product) => {
+        if (
+          typeof product.productId === "object" &&
+          product.productId !== null
+        ) {
+          return (product.productId as { _id: string })._id;
+        }
+        return product.productId;
+      })
     : Array.isArray(cartData?.results?.products)
-    ? cartData?.results?.products?.map((product) => product.productId)
+    ? cartData.results.products.map((product) => {
+        if (
+          typeof product.productId === "object" &&
+          product.productId !== null
+        ) {
+          return (product.productId as { _id: string })._id;
+        }
+        return product.productId;
+      })
     : [];
 
   if (productIsLoading) {

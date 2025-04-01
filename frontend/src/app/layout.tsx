@@ -25,7 +25,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} antialiased`}>
-        <Toaster position="top-center" />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: { zIndex: 99999999 },
+          }}
+          containerStyle={{
+            position: "fixed",
+            top: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "100%",
+            pointerEvents: "none",
+          }}
+        />
+        ;
         <AppProvider>
           <RefreshToken />
           {children}

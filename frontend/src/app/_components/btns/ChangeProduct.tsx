@@ -24,14 +24,22 @@ const ChangeProduct = ({
     const formData = new FormData(e.currentTarget);
 
     toast
-      .promise(app.patch(`/admin/update-product/${product._id}`, formData), {
-        loading: "Updating product...",
-        success: (res) => {
-          return res.data.message || "Product updated successfully!";
-        },
-        error: (err) =>
-          err.response?.data?.message || "Failed to update product",
-      })
+      .promise(
+        app.patch(`/admin/update-product/${product._id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }),
+        {
+          loading: "Updating product...",
+          success: (res) => {
+            refetch()
+            return res.data.message || "Product updated successfully!";
+          },
+          error: (err) =>
+            err.response?.data?.message || "Failed to update product",
+        }
+      )
       .then(() => {
         refetch();
         setIsOpen(false);

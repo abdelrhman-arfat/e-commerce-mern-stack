@@ -8,6 +8,7 @@ import app from "@/app/utils/axios_setting";
 import toast from "react-hot-toast";
 import Loader from "../../lodingAndErrors/Loader";
 import Error from "../../lodingAndErrors/Error";
+import Link from "next/link";
 
 const UserTable = () => {
   const [page, setPage] = useState<number>(1);
@@ -15,6 +16,26 @@ const UserTable = () => {
   const { data, isLoading, isError, refetch } = useGetAllUserQuery({ page });
 
   const me = useUserSelector();
+  if (me.user?.role === "USER") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 px-4">
+        <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+          <h1 className="text-4xl font-bold text-red-500">Access Denied</h1>
+          <p className="text-gray-600 mt-2">
+            You do not have permission to view this page.
+          </p>
+
+          <div className="mt-4">
+            <Link href="/">
+              <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
+                Go to Home
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return <Loader />;

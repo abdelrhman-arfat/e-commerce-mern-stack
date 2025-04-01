@@ -12,8 +12,8 @@ import {
 const orderRouter = Router();
 
 orderRouter
-  .get("/", protectedMiddleware, isVerified, adminWork, getAllOrders)
-  .post("/new-order", protectedMiddleware, isVerified, adminWork, createOrder)
+  .get("/", protectedMiddleware, adminWork, getAllOrders)
+  .post("/new-order", protectedMiddleware, isVerified, createOrder)
   .patch(
     "/order-update/:order_id",
     protectedMiddleware,

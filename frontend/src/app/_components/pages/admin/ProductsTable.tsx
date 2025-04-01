@@ -15,8 +15,12 @@ import { TCategory } from "@/app/types/CategoryType";
 import ChangeProduct from "../../btns/ChangeProduct";
 import Loader from "../../lodingAndErrors/Loader";
 import Error from "../../lodingAndErrors/Error";
+import useUserSelector from "@/app/hooks/AppSelector";
+import Link from "next/link";
 
 const ProductsTable = () => {
+  const me = useUserSelector();
+
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, refetch } = useGetAllProductsQuery({
     page,
@@ -25,13 +29,34 @@ const ProductsTable = () => {
   const { data: categoryData, refetch: categoryRefetch } =
     useGetAllCategoriesQuery();
 
-    if (isLoading) {
-      return <Loader />;
-    }
-  
-    if (isError) {
-      return <Error />;
-    }
+  if (me.user?.role === "USER") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 px-4">
+        <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+          <h1 className="text-4xl font-bold text-red-500">Access Denied</h1>
+          <p className="text-gray-600 mt-2">
+            You do not have permission to view this page.
+          </p>
+
+          <div className="mt-4">
+            <Link href="/">
+              <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
+                Go to Home
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
   return (
     <>
       <div className="w-full flex gap-3 items-center justify-center">

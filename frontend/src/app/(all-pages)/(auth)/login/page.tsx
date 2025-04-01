@@ -28,7 +28,7 @@ const LoginPage = () => {
             return res.data.message || "can't login";
           }
           dispatch(login(res.data.results));
-          Router.push("/");
+          Router.replace("/");
           return res?.data?.message || "Login successful!";
         },
         error: (err) => err.response?.data?.message || "Login failed!",

@@ -12,11 +12,11 @@ const UserCard = ({ user }: { user: TUser }) => {
     <div>
       {isOpen && <UserSetting setIsOpen={setIsOpen} user={user} />}
       {user.isAuthenticated ? (
-        <div className="h-[40px] w-[40px] relative rounded-full overflow-hidden">
+        <div className="h-[50px] bg-gray-300 w-[50px] relative rounded-full overflow-hidden">
           {user.user?.profilePicture ? (
             <Image
-              src={user.user.profilePicture}
-              alt="Profile"
+              src={user?.user?.profilePicture}
+              alt="User image"
               width={40}
               height={40}
               className="w-full h-full object-cover cursor-pointer rounded-full"
@@ -35,14 +35,14 @@ const UserCard = ({ user }: { user: TUser }) => {
           )}
         </div>
       ) : (
-        <li>
+        <div>
           <Link
             className="px-5 py-1.5 rounded-md bg-ten hover:bg-nine text-white duration-300"
             href={"/login"}
           >
             Login
           </Link>
-        </li>
+        </div>
       )}
     </div>
   );

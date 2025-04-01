@@ -17,7 +17,7 @@ const AddToFav = ({
     <button
       className={`${
         isInFav ? "bg-love text-white" : "text-red-500 bg-gray-100"
-      } p-1.5 flex items-center justify-center rounded-xl hover:scale-105 duration-300 `}
+      } p-1.5 flex items-center justify-center rounded-xl hover:scale-105`}
       onClick={() => {
         toast.promise(app.post(`/favorites/${_id}`), {
           loading: isInFav ? "delete form favorites..." : "add to favorites...",
@@ -34,7 +34,7 @@ const AddToFav = ({
         });
       }}
     >
-      <BsHeart size={"16px"}  />
+      <BsHeart size={"16px"} />
     </button>
   );
 };

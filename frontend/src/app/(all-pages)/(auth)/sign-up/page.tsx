@@ -26,7 +26,7 @@ const SignUpPage = () => {
       success: (res) => {
         setIsSignUp(false);
         dispatch(login(res.data.results));
-        Router.push("/");
+        Router.replace("/");
         return res.data.message || "Signed up successfully";
       },
       error: (err) => {
