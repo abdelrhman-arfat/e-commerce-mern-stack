@@ -84,7 +84,7 @@ const getProductById = async (req: Request, res: Response): Promise<void> => {
       })
       .populate({
         path: "comments.user",
-        select: "username email fullname",
+        select: "username email profilePicture fullname",
       });
 
     if (!resProduct) {
@@ -389,7 +389,7 @@ const addCommentToProduct = async (
     }
 
     const { comment } = req.body;
-    if (!comment?.trim()) {
+    if (!comment) {
       res.status(400).json({
         message: "Comment is required",
         error: "Empty comment",
@@ -437,8 +437,9 @@ const addCommentToProduct = async (
 
 const deleteComment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { product_id, comment_id } = req.params;
-    if (!isValidObjectId(product_id) || !isValidObjectId(comment_id)) {
+    const { product_id, comment_id } = req.query;
+
+    if (!isValidObjectId(product_id)) {
       res.status(400).json({
         message: "invalid id",
         error: null,
@@ -460,10 +461,10 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const product = await Product.findById(product_id).populate({
-      path: "comments.user",
-      select: "-password",
-    });
+    const product = await Product.findById(product_id).populate(
+      "comments.user",
+      "_id email username "
+    );
 
     if (!product) {
       res.status(404).json({
@@ -479,6 +480,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
       comment._id.equals(comment_id)
     );
 
+
     if (commentIndex === -1) {
       res.status(400).json({
         message: "no existing comment",
@@ -491,8 +493,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
 
     const comment = product.comments[commentIndex];
     if (
-      userReq?._id?.toString() !== product.creator.toString() &&
-      userReq?._id?.toString() !== comment.user.toString() &&
+      userReq?._id?.toString() !== comment.user._id &&
       userReq.role !== "ADMIN"
     ) {
       res.status(403).json({

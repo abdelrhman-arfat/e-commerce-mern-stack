@@ -1,5 +1,5 @@
 import { TCategories } from "@/app/types/CategoryType";
-import { TProducts } from "@/app/types/productType";
+import { TProduct, TProducts } from "@/app/types/productType";
 import { TUsers } from "@/app/types/userTypes";
 import { API_URL } from "@/app/utils/constants/api_url";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -30,6 +30,19 @@ export const ecommerceAPI = createApi({
           `/products?page=${page}&limit=${limit}`,
       }
     ),
+
+    getProductById: builder.query<
+      {
+        code: number;
+        message: string;
+        error?: string;
+        results: TProduct;
+      },
+      string
+    >({
+      query: (id) => `/products/${id}`,
+    }),
+
     getRandomProducts: builder.query<TProducts, void>({
       query: () => "/products/random-products",
     }),
@@ -51,4 +64,5 @@ export const {
   useGetAllInCartQuery,
   useGetAllInFavToPageQuery,
   useGetAllOrdersQuery,
+  useGetProductByIdQuery,
 } = ecommerceAPI;

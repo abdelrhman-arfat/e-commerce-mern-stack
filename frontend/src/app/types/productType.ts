@@ -6,17 +6,9 @@ export type TProduct = {
   description?: string;
   price: number;
   image: string;
-  category?: string;
-  isDone?: boolean;
-  quantity?: number;
-  userId: string | { fullname: string; email: string; _id: string };
-  likes: { userId: string; createdAt: Date; updatedAt: Date }[];
-  comments: {
-    userId: string;
-    comment: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  category: string;
+  isDone: boolean;
+  quantity: number;
   products: {
     productId: {
       quantity: number;
@@ -26,12 +18,32 @@ export type TProduct = {
       category: string;
       _id: string;
     }[];
-    userId: {
+    userId: string | { fullname: string; email: string; _id: string };
+  }[];
+  likes: {
+    user: {
       fullname: string;
       email: string;
       _id: string;
-    }[];
-  };
+      profilePicture: string;
+    };
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+  comments: {
+    user: {
+      fullname: string;
+      email: string;
+      _id: string;
+      profilePicture: string;
+    };
+    _id: string;
+    comment: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+  userId: string | { fullname: string; email: string; _id: string };
+
   productId?:
     | {
         quantity: number;

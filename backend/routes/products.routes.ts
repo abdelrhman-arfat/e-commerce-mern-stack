@@ -18,12 +18,7 @@ productsRouter
   .get("/random-products", getRandomProducts)
   .get("/:product_id", getProductById)
   .get("/by-category/:name", getProductByCategory)
-  .delete(
-    "/delete-comment/:product_id",
-    protectedMiddleware,
-    isVerified,
-    deleteComment
-  )
+  .delete("/delete-comment", protectedMiddleware, isVerified, deleteComment)
   .post(
     "/comment/:product_id",
     protectedMiddleware,

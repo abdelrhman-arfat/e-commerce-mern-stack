@@ -16,12 +16,15 @@ type Product = {
   };
   quantity: number;
 };
-
+interface Cart {
+  products: Product[];
+  // other properties if needed
+}
 const CartPage = () => {
   const { data, refetch } = useGetAllInCartQuery();
 
-  const products = (data?.results?.products || []) as Product[];
-
+  const cart = data?.results as Cart;
+  const products = cart?.products || [];
   const totalPrice = products.reduce(
     (acc, product) => acc + product.quantity * product.productId.price,
     0
