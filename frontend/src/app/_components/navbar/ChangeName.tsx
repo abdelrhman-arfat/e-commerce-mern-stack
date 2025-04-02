@@ -13,7 +13,7 @@ const ChangeName = ({ currentName }: { currentName: string }) => {
   const handleSave = () => {
     if (newName.length < 5) {
       toast.error("Name must be at least 5 characters long.");
-      return;
+    return;
     }
     toast.promise(app.patch("/users/change-name", { newName }), {
       loading: "Updating name...",

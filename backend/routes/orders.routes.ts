@@ -7,12 +7,14 @@ import {
   deleteOrderById,
   getAllOrders,
   doneTheOrder,
+  getUserOrder,
 } from "../controllers/orders.controller.js";
 
 const orderRouter = Router();
 
 orderRouter
   .get("/", protectedMiddleware, adminWork, getAllOrders)
+  .get("/user-order", protectedMiddleware, getUserOrder)
   .post("/new-order", protectedMiddleware, isVerified, createOrder)
   .patch(
     "/order-update/:order_id",

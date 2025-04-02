@@ -19,19 +19,24 @@ const AddToFav = ({
         isInFav ? "bg-love text-white" : "text-red-500 bg-gray-100"
       } p-1.5 flex items-center justify-center rounded-xl hover:scale-105`}
       onClick={() => {
-        toast.promise(app.post(`/favorites/${_id}`), {
-          loading: isInFav ? "delete form favorites..." : "add to favorites...",
-          success: (res) => {
+        toast
+          .promise(app.post(`/favorites/${_id}`), {
+            loading: isInFav
+              ? "delete form favorites..."
+              : "add to favorites...",
+            success: (res) => {
+              return res?.data?.message || "operation completed successfully";
+            },
+            error: (err) => {
+              return (
+                err.response?.data?.message ||
+                "An error occurred while adding to favorites"
+              );
+            },
+          })
+          .then(() => {
             refetch();
-            return res?.data?.message || "operation completed successfully";
-          },
-          error: (err) => {
-            return (
-              err.response?.data?.message ||
-              "An error occurred while adding to favorites"
-            );
-          },
-        });
+          });
       }}
     >
       <BsHeart size={"16px"} />

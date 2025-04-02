@@ -19,12 +19,12 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
 
     const userReq = req?.user;
 
-    if (!userReq) {
+    if (!userReq || !isValidObjectId(userReq._id)) {
       res.status(401).json({
-        message: "Unauthorized",
-        error: "Unauthorized",
+        message: "You should login first",
+        error: "Invalid user id",
         results: null,
-        code: 401,
+        code: 400,
       });
       return;
     }
@@ -55,6 +55,42 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
       results: order,
       code: 201,
     });
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      error: error.message,
+      message: "internal error occurred",
+      results: null,
+      code: 500,
+    });
+  }
+};
+
+const getUserOrder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = req.user;
+    if (!user || !isValidObjectId(user._id)) {
+      res.status(401).json({
+        message: "You should login first",
+        error: "Invalid user id",
+        results: null,
+        code: 400,
+      });
+      return;
+    }
+    const [orders, totalOrders] = await Promise.all([
+      Order.find({}).populate("productId", "title price image"),
+      Order.countDocuments(),
+    ]);
+
+    res.status(200).json({
+      message: "Orders fetched successfully",
+      error: null,
+      results: orders,
+      totalOrders,
+      code: 200,
+    });
+    return;
   } catch (err) {
     const error = err as Error;
     res.status(500).json({
@@ -192,4 +228,10 @@ const doneTheOrder = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { doneTheOrder, createOrder, getAllOrders, deleteOrderById };
+export {
+  doneTheOrder,
+  createOrder,
+  getAllOrders,
+  getUserOrder,
+  deleteOrderById,
+};

@@ -130,13 +130,12 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
     }
 
     const userReq = req?.user;
-
-    if (!userReq) {
+    if (!userReq || !isValidObjectId(userReq._id)) {
       res.status(401).json({
-        message: "You should login first and try again",
-        error: null,
+        message: "You should login first",
+        error: "Invalid user id",
         results: null,
-        code: 401,
+        code: 400,
       });
       return;
     }
@@ -303,15 +302,16 @@ const addOrDeleteLikeToProduct = async (
 
     const userReq = req?.user;
 
-    if (!userReq) {
+    if (!userReq || !isValidObjectId(userReq._id)) {
       res.status(401).json({
-        message: "Please login first and try again",
-        error: null,
+        message: "You should login first",
+        error: "Invalid user id",
         results: null,
-        code: 401,
+        code: 400,
       });
       return;
     }
+
 
     const product = await Product.findById(product_id);
     if (!product) {
@@ -378,12 +378,12 @@ const addCommentToProduct = async (
 
     const userReq = req?.user;
 
-    if (!userReq) {
+    if (!userReq || !isValidObjectId(userReq._id)) {
       res.status(401).json({
-        message: "you should login first and try again",
-        error: null,
-        code: 401,
+        message: "You should login first",
+        error: "Invalid user id",
         results: null,
+        code: 400,
       });
       return;
     }
@@ -453,13 +453,14 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
 
     if (!userReq || !isValidObjectId(userReq._id)) {
       res.status(401).json({
-        message: "you should login first and try again",
-        error: null,
-        code: 401,
+        message: "You should login first",
+        error: "Invalid user id",
         results: null,
+        code: 400,
       });
       return;
     }
+
 
     const product = await Product.findById(product_id).populate(
       "comments.user",

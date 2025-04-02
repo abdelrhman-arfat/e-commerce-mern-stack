@@ -9,6 +9,7 @@ import ProductCardSkeleton from "../../cards/ProductCardSkeleton";
 import ProductDiv from "../../common/ProductDiv";
 import ProductCard from "../../cards/ProductCard";
 import { TProduct } from "@/app/types/productType";
+import Link from "next/link";
 
 // some random products:
 const ThirdHeroSection = () => {
@@ -23,7 +24,7 @@ const ThirdHeroSection = () => {
     favDate?.results?.map((product: TProduct) => product.productId);
 
   const { data: cartData, refetch: cartRefetch } = useGetAllInCartQuery();
-  
+
   const inCart = Array.isArray(cartData?.results)
     ? cartData.results.map((product) => {
         if (
@@ -64,6 +65,9 @@ const ThirdHeroSection = () => {
 
   return (
     <section>
+      <div className="my-3">
+        <h1 className="text-2xl font-bold text-gray-900">For You:</h1>
+      </div>
       {Array.isArray(ProductData?.results) && ProductData?.results?.length ? (
         <ProductDiv>
           {ProductData?.results?.map((item) => (
@@ -85,6 +89,14 @@ const ThirdHeroSection = () => {
           No Products found until now.
         </div>
       )}
+      <div className="w-full h-[50px] flex items-center  my-4 justify-center ">
+        <Link
+          className="text-xl px-4 py-2 bg-neutral-100 shadow-md  duration-300 sm:hover:scale-110 "
+          href={"/shop"}
+        >
+          Show All products
+        </Link>
+      </div>
     </section>
   );
 };

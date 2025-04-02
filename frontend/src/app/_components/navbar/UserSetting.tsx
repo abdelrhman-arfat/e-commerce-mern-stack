@@ -57,15 +57,34 @@ const UserSetting = ({
                   Admin Panel
                 </Link>
               )}
-              <div className="flex gap-4">
-                <Link href="/cart" className="text-blue-500 hover:underline">
+              <div className="flex gap-4 my-2">
+                <Link
+                  onClick={() => setIsOpen(false)}
+                  href="/"
+                  className="text-amber-900-50 text-sm hover:underline"
+                >
+                  🏠 Home
+                </Link>
+                <Link
+                  onClick={() => setIsOpen(false)}
+                  href="/cart"
+                  className="text-blue-500 text-sm hover:underline"
+                >
                   🛒 Cart
                 </Link>
-                <Link href="/fav" className="text-yellow-500 hover:underline">
-                  ⭐ Favorites
+                <Link
+                  onClick={() => setIsOpen(false)}
+                  href="/my-orders"
+                  className="text-green-700 text-sm hover:underline"
+                >
+                  📙 Orders
                 </Link>
-                <Link href="/" className="text-amber-900-50 hover:underline">
-                  🏠 Home
+                <Link
+                  onClick={() => setIsOpen(false)}
+                  href="/fav"
+                  className="text-yellow-500 text-sm hover:underline"
+                >
+                  ⭐ Favorites
                 </Link>
               </div>
             </div>

@@ -8,6 +8,7 @@ import useUserSelector from "@/app/hooks/AppSelector";
 import toast from "react-hot-toast";
 import app from "@/app/utils/axios_setting";
 import DeleteComment from "../btns/DeleteComment";
+import OrderButton from "../btns/AddOrder";
 
 const OneProductCard = ({ id }: { id: string }) => {
   const { data, isError, isLoading, refetch } = useGetProductByIdQuery(id);
@@ -72,6 +73,7 @@ const OneProductCard = ({ id }: { id: string }) => {
       {/* Price and Category */}
       <p className="text-xl font-semibold text-green-600">{`$${results?.price}`}</p>
       <p className="text-md text-gray-500">Category: {results?.category}</p>
+      <OrderButton id={id} />
 
       {/* Like Button */}
       <div className="likes mt-4 flex items-center justify-start space-x-3">
@@ -90,7 +92,7 @@ const OneProductCard = ({ id }: { id: string }) => {
 
       {/* Comments Section */}
       <div className="comments mt-6">
-        <div className="flex items-center gap-3">
+        <div className="md:flex items-center gap-3">
           <h3 className="text-2xl font-semibold text-gray-800">Comments</h3>
           <AddComment refetch={refetch} productId={id} />
         </div>

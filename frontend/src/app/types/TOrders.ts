@@ -4,6 +4,12 @@ export type TIOrder = {
   quantity: number;
   isDone: boolean;
   price: number;
+  productId?: {
+    title: string;
+    image: string;
+    category: string;
+    _id: string;
+  };
   title: string;
   image: string;
   category: string;
@@ -11,6 +17,7 @@ export type TIOrder = {
 };
 
 export type TOrder = {
+  _id: string | undefined;
   isDone: boolean;
   productId?: TIOrder;
 

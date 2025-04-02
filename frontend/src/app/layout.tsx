@@ -39,7 +39,6 @@ export default function RootLayout({
             pointerEvents: "none",
           }}
         />
-        ;
         <AppProvider>
           <RefreshToken />
           {children}

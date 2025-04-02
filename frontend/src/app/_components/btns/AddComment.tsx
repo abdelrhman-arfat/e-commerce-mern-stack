@@ -33,7 +33,9 @@ const AddComment = ({
             refetch();
             return res.data.message || "Comment added successfully";
           },
-          error: "Failed to add comment.",
+
+          error: (err) =>
+            err.response?.data?.message || "Failed to add comment.",
         }
       );
 
@@ -41,7 +43,7 @@ const AddComment = ({
       setComment("");
       setIsCommenting(false);
     } else {
-      toast.error("Please enter a comment.");
+      toast.error("The comment can't be empty.");
     }
   };
 
@@ -55,14 +57,16 @@ const AddComment = ({
           Add Comment
         </button>
       ) : (
-        <div className="mt-4 flex flex-col space-y-3">
-          <input
-            type="text"
-            value={comment}
-            onChange={handleCommentChange}
-            className="p-3 border border-gray-300 rounded-md"
-            placeholder="Write your comment..."
-          />
+        <div className="mt-4 flex md:flex-row flex-col md:items-center md:gap-3 space-y-3">
+          <div>
+            <input
+              type="text"
+              value={comment}
+              onChange={handleCommentChange}
+              className="px-3 py-3 border border-gray-300 rounded-md"
+              placeholder="Write your comment..."
+            />
+          </div>
           <div className="flex space-x-4">
             <button
               onClick={handleSubmit}

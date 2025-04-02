@@ -104,7 +104,6 @@ const createNewCategory = async (
 const deleteCategory = async (req: Request, res: Response): Promise<void> => {
   try {
     const { category_id } = req.params;
-
     if (!isValidObjectId(category_id)) {
       res.status(400).json({
         message: "Invalid category id",
@@ -115,7 +114,7 @@ const deleteCategory = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const category = await Categories.findById(category_id).exec();
+    const category = await Categories.findById(category_id);
 
     if (!category || !category.image) {
       res.status(404).json({

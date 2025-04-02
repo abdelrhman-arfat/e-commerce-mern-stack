@@ -1,5 +1,6 @@
 import { TCategories } from "@/app/types/CategoryType";
 import { TProduct, TProducts } from "@/app/types/productType";
+import { TOrders } from "@/app/types/TOrders";
 import { TUsers } from "@/app/types/userTypes";
 import { API_URL } from "@/app/utils/constants/api_url";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -30,6 +31,9 @@ export const ecommerceAPI = createApi({
           `/products?page=${page}&limit=${limit}`,
       }
     ),
+    getUserOrders: builder.query<TOrders, void>({
+      query: () => "/orders/user-order",
+    }),
 
     getProductById: builder.query<
       {
@@ -64,5 +68,6 @@ export const {
   useGetAllInCartQuery,
   useGetAllInFavToPageQuery,
   useGetAllOrdersQuery,
+  useGetUserOrdersQuery,
   useGetProductByIdQuery,
 } = ecommerceAPI;

@@ -30,7 +30,7 @@ const protectedMiddleware = async (
         error: null,
         results: [],
         code: 401,
-        message: "Not authenticated",
+        message: "You should login first",
       });
       return;
     }
@@ -55,7 +55,7 @@ const protectedMiddleware = async (
         error: null,
         results: [],
         code: 401,
-        message: "Not authenticated",
+        message: "You should login first",
       });
       return;
     }

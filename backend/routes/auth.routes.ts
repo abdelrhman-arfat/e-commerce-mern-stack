@@ -10,6 +10,7 @@ import loginLimiter from "../middleware/loginLimiter.js";
 import signUpLimiter from "../middleware/signUpLimiter.js";
 import protectedMiddleware from "../middleware/protected.js";
 import { body } from "express-validator";
+import isVerified from "../middleware/isVerified.js";
 
 const loginValidator = [
   body("username").isLength({
@@ -34,6 +35,7 @@ authRouter
   .post("/sign-up", signUpLimiter, signUpValidator, signUP)
 
   .post("/login", loginValidator, login)
+  .post("/send-verification", protectedMiddleware, isVerified)
   .post("/verify-account", protectedMiddleware, verificationAccount)
   .get("/refresh-token", protectedMiddleware, refreshToken)
   .post("/logout", protectedMiddleware, logOut);

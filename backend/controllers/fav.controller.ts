@@ -102,9 +102,18 @@ const addOrDeleteToFav = async (req: Request, res: Response): Promise<void> => {
     const userReq = req?.user;
     const { product_id } = req.params;
 
-    if (!isValidObjectId(userReq._id) || !isValidObjectId(product_id)) {
+    if (!isValidObjectId(userReq._id)) {
+      res.status(401).json({
+        message: "You should login first",
+        error: null,
+        results: null,
+        code: 401,
+      });
+      return;
+    }
+    if(!isValidObjectId(product_id)){
       res.status(400).json({
-        message: "Invalid user or product id",
+        message: "Invalid product id",
         error: null,
         results: null,
         code: 400,

@@ -96,11 +96,11 @@ const changeImage = async (req: Request, res: Response) => {
     }
 
     if (!userReq || !isValidObjectId(userReq._id)) {
-      res.status(403).json({
-        message: "Please login first",
-        code: 403,
-        error: "Unauthorized",
-        results: [],
+      res.status(401).json({
+        message: "You should login first",
+        error: "Invalid user id",
+        results: null,
+        code: 400,
       });
       return;
     }
@@ -173,8 +173,8 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
     const userReq = req?.user;
 
     if (!isValidObjectId(userReq._id)) {
-      res.status(400).json({
-        message: "Invalid user id",
+      res.status(401).json({
+        message: "You should login first",
         error: "Invalid user id",
         results: null,
         code: 400,
@@ -240,11 +240,11 @@ const changeName = async (req: Request, res: Response) => {
   try {
     const userReq = req.user;
     if (!userReq || !isValidObjectId(userReq._id)) {
-      res.status(403).json({
-        message: "Please login first",
-        code: 403,
-        error: "Unauthorized",
-        results: [],
+      res.status(401).json({
+        message: "You should login first",
+        error: "Invalid user id",
+        results: null,
+        code: 400,
       });
       return;
     }

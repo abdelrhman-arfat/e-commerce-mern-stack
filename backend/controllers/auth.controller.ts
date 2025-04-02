@@ -295,6 +295,31 @@ const verificationAccount = async (req: Request, res: Response) => {
       });
       return;
     }
+    const userInfo = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+      fullname: user.fullname,
+      profilePicture: user.profilePicture,
+    };
+
+    const accessToken = await webAccessToken(userInfo);
+    const refreshToken = await webRefreshToken(userInfo);
+
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+    res.cookie("token", accessToken, {
+      maxAge: 1000 * 60 * 60 * 15, // 15 Min
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
 
     res.status(200).json({
       message: "verification successful",
