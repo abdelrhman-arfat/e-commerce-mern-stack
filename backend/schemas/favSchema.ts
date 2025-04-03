@@ -12,7 +12,6 @@ const favSchema = new mongoose.Schema<IFavSchema>({
     ref: "users",
   },
   productId: {
-    unique: true,
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "products",

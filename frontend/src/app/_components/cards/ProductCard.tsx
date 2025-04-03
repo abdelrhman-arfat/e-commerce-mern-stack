@@ -45,7 +45,7 @@ const ProductCard = ({
           <h6 className="mb-2 text-slate-800 text-xl font-semibold">
             {item.title}
           </h6>
-          <p className="text-slate-600 line-clamp-2  font-light">
+          <p className="text-slate-600 line-clamp-2 min-h-[50px]  font-light">
             {item.description}
           </p>
           <p className="bg-neutral-700 text-white w-fit px-2 py-1 rounded-md my-3 line-clamp-2  text-sm">
