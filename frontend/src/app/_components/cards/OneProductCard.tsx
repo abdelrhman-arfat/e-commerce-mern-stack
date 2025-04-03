@@ -18,10 +18,10 @@ const OneProductCard = ({ id }: { id: string }) => {
   );
   const handleLikeClick = () => {
     toast.promise(app.patch(`/products/like/${id}`), {
-      loading: "Adding to favorites...",
+      loading: isIn?.length ? "Delete like" : "Add like ...",
       success: (res) => {
         refetch();
-        return res.data.message;
+        return res.data.message || "Success";
       },
       error: (err) => {
         return (
