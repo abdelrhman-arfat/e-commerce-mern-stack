@@ -18,6 +18,7 @@ import Error from "../../lodingAndErrors/Error";
 import useUserSelector from "@/app/hooks/AppSelector";
 import Link from "next/link";
 import DeleteCategory from "../../btns/DeleteCategory";
+import Refresh from "../../btns/Refresh";
 
 const ProductsTable = () => {
   const me = useUserSelector();
@@ -68,6 +69,8 @@ const ProductsTable = () => {
         <AddCategoryModal refetch={categoryRefetch} />
         <DeleteCategory data={categoryData} refetch={categoryRefetch} />
       </div>
+      <Refresh refetch={refetch} />
+
       <div className="flex p-4 justify-between items-center">
         <button
           disabled={page === 1}

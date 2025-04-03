@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import Loader from "../../lodingAndErrors/Loader";
 import Error from "../../lodingAndErrors/Error";
 import Link from "next/link";
+import Refresh from "../../btns/Refresh";
 
 const UserTable = () => {
   const [page, setPage] = useState<number>(1);
@@ -47,6 +48,7 @@ const UserTable = () => {
   return (
     <>
       <div>
+        <Refresh refetch={refetch} />
         <div className="flex p-4 justify-between items-center ">
           <button
             disabled={page === 1}

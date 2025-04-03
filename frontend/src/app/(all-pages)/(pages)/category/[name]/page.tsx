@@ -1,27 +1,19 @@
 "use client";
 import CategoriesData from "@/app/_components/common/CategoriesData";
 import ProductCard from "@/app/_components/cards/ProductCard";
-import { TProduct, TProducts } from "@/app/types/productType";
-import React, { useEffect, useState } from "react";
-import app from "@/app/utils/axios_setting";
+import { TProduct } from "@/app/types/productType";
 import {
   useGetAllInCartQuery,
   useGetAllInFavQuery,
+  useGetProductByCategoryQuery,
 } from "@/app/_RTK/RTK-query/RTK_Query";
 import { useParams } from "next/navigation";
+import Refresh from "@/app/_components/btns/Refresh";
 
 const Page = () => {
   const params = useParams();
   const name = params?.name;
-  const [data, setData] = useState<TProducts>();
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await app.get(`/products/by-category/${name}`);
-      const data = await res.data;
-      setData(data);
-    };
-    fetchData();
-  }, [name]);
+  const { data, refetch } = useGetProductByCategoryQuery(name as string);
   const { data: favDate, refetch: favRefetch } = useGetAllInFavQuery();
   const inFav =
     Array.isArray(favDate?.results) &&
@@ -50,7 +42,6 @@ const Page = () => {
         return product.productId;
       })
     : [];
-
 
   return (
     <div>
@@ -92,12 +83,7 @@ const Page = () => {
             <p className="text-sm text-gray-500 mt-1">
               Try exploring other categories!
             </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition"
-            >
-              Refresh
-            </button>
+            <Refresh refetch={refetch} />
           </div>
         )}
       </div>

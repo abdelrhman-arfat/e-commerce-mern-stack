@@ -9,6 +9,7 @@ import Loader from "../../lodingAndErrors/Loader";
 import Error from "../../lodingAndErrors/Error";
 import Link from "next/link";
 import useUserSelector from "@/app/hooks/AppSelector";
+import Refresh from "../../btns/Refresh";
 
 const OrderTable = () => {
   const me = useUserSelector();
@@ -45,6 +46,8 @@ const OrderTable = () => {
 
   return (
     <>
+      <Refresh refetch={refetch} />
+
       <div className="flex p-4 justify-between items-center">
         <button
           disabled={page === 1}

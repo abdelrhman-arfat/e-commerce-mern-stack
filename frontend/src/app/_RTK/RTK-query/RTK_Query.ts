@@ -46,6 +46,9 @@ export const ecommerceAPI = createApi({
     >({
       query: (id) => `/products/${id}`,
     }),
+    getProductByCategory: builder.query<TProducts, string>({
+      query: (category) => `/products/by-category/${category}`,
+    }),
 
     getRandomProducts: builder.query<TProducts, void>({
       query: () => "/products/random-products",
@@ -70,4 +73,5 @@ export const {
   useGetAllOrdersQuery,
   useGetUserOrdersQuery,
   useGetProductByIdQuery,
+  useGetProductByCategoryQuery,
 } = ecommerceAPI;
