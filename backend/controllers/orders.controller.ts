@@ -58,10 +58,10 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
   } catch (err) {
     const error = err as Error;
     res.status(500).json({
-      error: error.message,
-      message: "internal error occurred",
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };
@@ -94,10 +94,10 @@ const getUserOrder = async (req: Request, res: Response): Promise<void> => {
   } catch (err) {
     const error = err as Error;
     res.status(500).json({
-      error: error.message,
-      message: "internal error occurred",
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };
@@ -128,10 +128,10 @@ const getAllOrders = async (req: Request, res: Response): Promise<void> => {
   } catch (err) {
     const error = err as Error;
     res.status(500).json({
-      error: error.message,
-      message: "internal error occurred",
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };
@@ -172,10 +172,10 @@ const deleteOrderById = async (req: Request, res: Response): Promise<void> => {
   } catch (err) {
     const error = err as Error;
     res.status(500).json({
-      error: error.message,
-      message: "internal error occurred",
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };
@@ -220,10 +220,10 @@ const doneTheOrder = async (req: Request, res: Response): Promise<void> => {
   } catch (err) {
     const error = err as Error;
     res.status(500).json({
-      message: "internal error",
-      error: error.message,
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };

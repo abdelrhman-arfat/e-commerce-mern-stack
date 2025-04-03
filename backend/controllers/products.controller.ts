@@ -16,13 +16,13 @@ const getRandomProducts = async (
       results: products,
       code: 200,
     });
-  } catch (error) {
-    const err = error as Error;
+  } catch (err) {
+    const error = err as Error;
     res.status(500).json({
-      message: "Internal server error",
-      error: err.message,
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };
@@ -53,13 +53,13 @@ const getAllProducts = async (req: Request, res: Response): Promise<void> => {
       results: products,
       code: 200,
     });
-  } catch (error) {
-    const err = error as Error;
+  } catch (err) {
+    const error = err as Error;
     res.status(500).json({
-      message: "Internal server error",
-      error: err.message,
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };
@@ -103,13 +103,13 @@ const getProductById = async (req: Request, res: Response): Promise<void> => {
       results: resProduct,
       code: 200,
     });
-  } catch (error) {
-    const err = error as Error;
+  } catch (err) {
+    const error = err as Error;
     res.status(500).json({
-      message: "Internal server error",
-      error: err.message,
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };
@@ -158,13 +158,13 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
       code: 201,
     });
     return;
-  } catch (error) {
-    const err = error as Error;
+  } catch (err) {
+    const error = err as Error;
     res.status(500).json({
-      message: "Error creating product",
-      error: err.message,
-      results: null,
+      message: error.message,
+      error: error,
       code: 500,
+      results: null,
     });
   }
 };
@@ -210,14 +210,12 @@ const deleteProductById = async (
     return;
   } catch (err) {
     const error = err as Error;
-
     res.status(500).json({
-      message: "internal server error",
-      error: error.message,
+      message: error.message,
+      error: error,
       code: 500,
-      results: [],
+      results: null,
     });
-    return;
   }
 };
 
@@ -274,14 +272,12 @@ const updateProductDate = async (
     });
   } catch (err) {
     const error = err as Error;
-
     res.status(500).json({
-      message: "internal server error",
-      error: error.message,
+      message: error.message,
+      error: error,
       code: 500,
-      results: [],
+      results: null,
     });
-    return;
   }
 };
 const addOrDeleteLikeToProduct = async (
@@ -311,7 +307,6 @@ const addOrDeleteLikeToProduct = async (
       });
       return;
     }
-
 
     const product = await Product.findById(product_id);
     if (!product) {
@@ -461,7 +456,6 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-
     const product = await Product.findById(product_id).populate(
       "comments.user",
       "_id email username "
@@ -549,8 +543,8 @@ const getProductByCategory = async (req: Request, res: Response) => {
   } catch (err) {
     const error = err as Error;
     res.status(500).json({
-      message: "Internal server error",
-      error: error.message,
+      message: error.message,
+      error: error,
       code: 500,
       results: null,
     });

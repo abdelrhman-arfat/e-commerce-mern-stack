@@ -1,6 +1,7 @@
 "use client";
 import ProductCard from "@/app/_components/cards/ProductCard";
 import ProductCardSkeleton from "@/app/_components/cards/ProductCardSkeleton";
+import CategoriesData from "@/app/_components/common/CategoriesData";
 import ProductDiv from "@/app/_components/common/ProductDiv";
 import {
   useGetAllInCartQuery,
@@ -65,6 +66,8 @@ const Page = () => {
   }
   return (
     <div>
+      <CategoriesData />
+
       <div>
         <h1 className="text-2xl font-bold text-gray-900">All Products</h1>
       </div>

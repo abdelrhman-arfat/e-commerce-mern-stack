@@ -43,7 +43,7 @@ const OneProductCard = ({ id }: { id: string }) => {
   const results = data?.results;
 
   return (
-    <div className="product-detail bg-white p-6 rounded-lg shadow-xl max-w-2xl mx-auto mt-10">
+    <div className="product-detail w-full sm:w-[97%] md:min-w-[500px] bg-white p-6 rounded-lg shadow-xl max-w-2xl mx-auto mt-10">
       {/* Post Header: User Avatar and Post Time */}
       <div className="flex items-center space-x-3 mb-6">
         <div className="w-12 h-12 rounded-full bg-gray-300"></div>{" "}
@@ -59,6 +59,7 @@ const OneProductCard = ({ id }: { id: string }) => {
       {/* Product Image */}
       <div className="relative w-full h-80 mb-6">
         <Image
+          priority
           src={results?.image as string}
           alt={results?.title as string}
           layout="fill"

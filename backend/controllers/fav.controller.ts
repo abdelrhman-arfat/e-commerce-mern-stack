@@ -89,10 +89,10 @@ const getUserFavoritesProducts = async (
     const error = err as Error;
 
     res.status(500).json({
-      error: error.message,
-      message: "Internal server error",
+      message: error.message,
+      error: error,
       code: 500,
-      results: [],
+      results: null,
     });
     return;
   }
@@ -111,7 +111,7 @@ const addOrDeleteToFav = async (req: Request, res: Response): Promise<void> => {
       });
       return;
     }
-    if(!isValidObjectId(product_id)){
+    if (!isValidObjectId(product_id)) {
       res.status(400).json({
         message: "Invalid product id",
         error: null,
@@ -152,8 +152,8 @@ const addOrDeleteToFav = async (req: Request, res: Response): Promise<void> => {
   } catch (err) {
     const error = err as Error;
     res.status(500).json({
-      message: "Internal server error",
-      error: error.message,
+      message: error.message,
+      error: error,
       code: 500,
       results: null,
     });
