@@ -57,6 +57,7 @@ npm run dev
 ```
 
 # .env
+```bash
 MONGODB_URI = ...
 
 CORS_ORIGIN = ...
@@ -72,6 +73,4 @@ JWT_REFRESH_SECRET = ...
 EMAIL_USER = ..
 EMAIL_PASS = ..
 NODE_ENV = development
-```bash
-
 ```
