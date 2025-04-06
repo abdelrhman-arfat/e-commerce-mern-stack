@@ -209,7 +209,6 @@ const OrderTable = () => {
                                       "Can't update the state",
                                   }
                                 );
-                                refetch();
                               }
                             });
                           }}
